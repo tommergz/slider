@@ -1,0 +1,10 @@
+.slide-counter {
+  position: absolute;
+  bottom: 35px;
+  color: white;
+  font-size: 25px;
+}
+
+.slide-counter p {
+  margin: 0;
+}

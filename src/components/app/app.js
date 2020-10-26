@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './app.css';
 import Slider from '../slider/slider';
-
+import ImgSubmitForm from '../img-submit-form/img-submit-form';
+import SlideSwitcher from '../slide-switcher/slide-switcher';
+import SlideCounter from '../slide-counter/slide-counter';
 
 export default class App extends Component {
   
@@ -15,16 +17,19 @@ export default class App extends Component {
       'https://images.unsplash.com/photo-1568164651648-d90699a5182d?ixlib=rb-1.2.1&auto=format&fit=crop&w=966&q=80'
     ],
     currentDataIndex: 3,
-    openSlider: true,
     slide: 0,
-    slideWay: 0
+    slideWay: 0,
+    inputValue: '',
+    slideValue: '',
+    switchToSlideX: false
   }
 
   prevSlide = () => {
     this.setState( (state) => ({
       currentDataIndex : state.currentDataIndex > 0 ? state.currentDataIndex - 1 : state.data.length - 1,
       slide: 100,
-      slideWay: -200
+      slideWay: -200,
+      switchToSlideX: false
     }) ) 
   }
 
@@ -32,7 +37,8 @@ export default class App extends Component {
     this.setState( (state) => ({
       currentDataIndex : state.currentDataIndex < state.data.length - 1 ? state.currentDataIndex + 1 : 0,
       slide: -100,
-      slideWay: 0
+      slideWay: 0,
+      switchToSlideX: false
     }) ) 
   }
 
@@ -42,22 +48,71 @@ export default class App extends Component {
     this.setState({
       slideWay: -100
     })
-    
+  }
+
+  handleChange = (e) => {
+    this.setState({inputValue: e.target.value});
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const link = this.state.inputValue;
+    this.setState(({data}) => {
+      const newData = [
+        ...data,
+        link
+      ];
+      return {
+        data: newData,
+        inputValue: ''
+      }
+    })
+  }
+
+  handleSlideValueChange = (e) => {
+    this.setState({slideValue: e.target.value});   
+  }
+
+  goToSlideX = (e) => {
+    e.preventDefault();
+    const x = Number(this.state.slideValue) - 1;
+    if (x > -1 && x < this.state.data.length) {
+      this.setState({
+        currentDataIndex: x,
+        slideWay: -100,
+        slideValue: '',
+        switchToSlideX: true
+      })
+    }
   }
 
   render() {
-    const {data, currentDataIndex, openSlider, slide, slideWay} = this.state;
+    const {data, currentDataIndex, slide, slideWay, inputValue, slideValue, switchToSlideX} = this.state;
     return(
-      <div>
+      <div className="app-wrapper">
+        <ImgSubmitForm
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          inputValue={inputValue}
+        />
+        <SlideSwitcher 
+          handleSlideValueChange={this.handleSlideValueChange}
+          goToSlideX={this.goToSlideX}
+          slideValue={slideValue}
+        />
         <Slider 
           data={data}
           currentDataIndex={currentDataIndex}
-          openSlider={openSlider}
           prevSlide={this.prevSlide}
           nextSlide={this.nextSlide}
           slide={slide}
           slideWay={slideWay}
           getSlideWidth={this.getSlideWidth}
+          switchToSlideX={switchToSlideX}
+        />
+        <SlideCounter 
+          currentDataIndex={currentDataIndex}
+          data={data}
         />
       </div>
     )

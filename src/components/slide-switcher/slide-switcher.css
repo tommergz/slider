@@ -1,0 +1,5 @@
+.slide-switcher-wrapper {
+  position: absolute;
+  bottom: 70px;
+  z-index: 1;
+}

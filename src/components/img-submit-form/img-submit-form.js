@@ -1,7 +1,7 @@
 import React from 'react';
-import './form.css';
+import './img-submit-form.css';
 
-const Form = ({handleSubmit, handleChange, inputValue}) => {
+const ImgSubmitForm = ({handleSubmit, handleChange, inputValue}) => {
   return(
     <div className="form-wrapper">
       <form className="form" onSubmit={handleSubmit}>
@@ -18,4 +18,4 @@ const Form = ({handleSubmit, handleChange, inputValue}) => {
   )
 }
 
-export default Form;
+export default ImgSubmitForm;

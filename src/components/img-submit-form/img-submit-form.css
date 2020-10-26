@@ -1,6 +1,7 @@
 .form-wrapper {
   position: absolute;
   top: 100px;
+  z-index: 1;
 }
 
 .img-url-input {

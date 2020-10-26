@@ -2,20 +2,6 @@ import React from 'react';
 import './slider.css';
 import { Component } from 'react';
 
-// const Slider = ({data, currentDataIndex, openSlider, prevSlide, nextSlide, slide}) => {
-//   return(
-//     <div className="slider-wrapper">
-//       <div className="slide">
-//         <img className="image" src={data[currentDataIndex]} />
-//       </div>
-//       <button className="button prev-button" onClick={prevSlide}>PREV</button>
-//       <button className="button next-button" onClick={nextSlide}>NEXT</button>
-//     </div>
-//   )
-// }
-
-// export default Slider;
-
 export default class App extends Component {
 
   state = {
@@ -85,20 +71,20 @@ export default class App extends Component {
   }
 
   render() {
-    const {data, currentDataIndex, openSlider, prevSlide, nextSlide, slide, slideWay} = this.props;
+    const {data, currentDataIndex, prevSlide, nextSlide, slideWay, switchToSlideX} = this.props;
     const {way} = this.state;
     const slides = this.makeSlides(data, currentDataIndex);
     let swipeStyles = {
       transform: `translateX(${slideWay}%)`
     };
-    if (way !== 0) {
+    if (way !== 0 && !switchToSlideX) {
       const swipeWidth = slideWay + way;
         swipeStyles = {
           transform: `translateX(${swipeWidth}%)`,
           transition: `transform ease-out 0.45s`
         }
     }
-    console.log(currentDataIndex)
+
     return(
       <div>
         <div className="slider-wrapper">
