@@ -4,6 +4,7 @@ import Slider from '../slider/slider';
 import ImgSubmitForm from '../img-submit-form/img-submit-form';
 import SlideSwitcher from '../slide-switcher/slide-switcher';
 import SlideCounter from '../slide-counter/slide-counter';
+import SlideRenderSetting from '../slide-render-setting/slide-render-setting';
 
 export default class App extends Component {
   
@@ -16,30 +17,38 @@ export default class App extends Component {
       'https://images.unsplash.com/photo-1550934172-beb213c78c11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
       'https://images.unsplash.com/photo-1568164651648-d90699a5182d?ixlib=rb-1.2.1&auto=format&fit=crop&w=966&q=80'
     ],
-    currentDataIndex: 3,
+    currentDataIndex: 0,
     slide: 0,
     slideWay: 0,
     inputValue: '',
     slideValue: '',
-    switchToSlideX: false
+    switchToSlideX: false,
+    multipleSlides: false,
+    slideRenderChange: false, 
   }
 
   prevSlide = () => {
-    this.setState( (state) => ({
-      currentDataIndex : state.currentDataIndex > 0 ? state.currentDataIndex - 1 : state.data.length - 1,
-      slide: 100,
-      slideWay: -200,
-      switchToSlideX: false
-    }) ) 
+    if (this.state.data.length > 1) {
+      this.setState( (state) => ({
+        currentDataIndex : state.currentDataIndex > 0 ? state.currentDataIndex - 1 : state.data.length - 1,
+        slide: 100,
+        slideWay: -200,
+        switchToSlideX: false,
+        slideRenderChange: false
+      }) ) 
+    }
   }
 
   nextSlide = () => {
-    this.setState( (state) => ({
-      currentDataIndex : state.currentDataIndex < state.data.length - 1 ? state.currentDataIndex + 1 : 0,
-      slide: -100,
-      slideWay: 0,
-      switchToSlideX: false
-    }) ) 
+    if (this.state.data.length > 1) {
+      this.setState( (state) => ({
+        currentDataIndex : state.currentDataIndex < state.data.length - 1 ? state.currentDataIndex + 1 : 0,
+        slide: -100,
+        slideWay: 0,
+        switchToSlideX: false,
+        slideRenderChange: false
+      }) ) 
+    }
   }
 
   getWidth = () => window.innerWidth;
@@ -81,15 +90,37 @@ export default class App extends Component {
         currentDataIndex: x,
         slideWay: -100,
         slideValue: '',
-        switchToSlideX: true
+        switchToSlideX: true,
       })
     }
   }
 
+  slideRenderSwitcher = () => {
+    this.setState(({multipleSlides}) => {
+      return {
+        multipleSlides: !multipleSlides,
+        slideRenderChange: true
+      }
+    })
+  }
+
   render() {
-    const {data, currentDataIndex, slide, slideWay, inputValue, slideValue, switchToSlideX} = this.state;
+    const {
+      data, 
+      currentDataIndex, 
+      slide, 
+      slideWay, 
+      inputValue, 
+      slideValue, 
+      switchToSlideX,
+      multipleSlides,
+      slideRenderChange} = this.state;
     return(
       <div className="app-wrapper">
+        <SlideRenderSetting 
+          multipleSlides={multipleSlides}
+          slideRenderSwitcher={this.slideRenderSwitcher}
+        />
         <ImgSubmitForm
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
@@ -109,10 +140,13 @@ export default class App extends Component {
           slideWay={slideWay}
           getSlideWidth={this.getSlideWidth}
           switchToSlideX={switchToSlideX}
+          multipleSlides={multipleSlides}
+          slideRenderChange={slideRenderChange}
         />
         <SlideCounter 
           currentDataIndex={currentDataIndex}
           data={data}
+          multipleSlides={multipleSlides}
         />
       </div>
     )

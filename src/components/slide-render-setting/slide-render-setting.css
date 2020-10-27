@@ -1,0 +1,22 @@
+.slide-render-setting-wrapper {
+  position: absolute;
+  left: 50px;
+  top: 35px;
+  z-index: 1;
+  background-color: black;
+}
+
+.slide-render-setting-wrapper p {
+  margin: 5px 0 5px;
+  color: white;
+  padding: 0 5px;
+}
+
+.slide-render-setting-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slide-render-setting-button {
+  width: 50%;
+}

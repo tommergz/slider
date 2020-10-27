@@ -1,8 +1,12 @@
 .slide-counter {
   position: absolute;
-  bottom: 35px;
+  bottom: 25px;
   color: white;
   font-size: 25px;
+  background-color: black;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
 }
 
 .slide-counter p {

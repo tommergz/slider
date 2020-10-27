@@ -28,6 +28,12 @@
   justify-content: center;
 }
 
+.multi-slide {
+  min-width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
 .image {
   width: 100%;
 }

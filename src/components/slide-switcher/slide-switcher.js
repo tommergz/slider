@@ -12,7 +12,7 @@ const SlideSwitcher = ({handleSlideValueChange, goToSlideX, slideValue}) => {
           onChange={handleSlideValueChange}
           value={slideValue}
         />
-        <button className="add-task-button" type="type">Add</button>
+        <button className="add-task-button" type="type">Choose</button>
       </form>
     </div>
   )
