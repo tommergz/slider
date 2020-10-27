@@ -3,7 +3,7 @@
   bottom: 25px;
   color: white;
   font-size: 25px;
-  background-color: black;
+  background-color: rgb(3, 5, 5);
   padding: 5px;
   display: flex;
   justify-content: center;
@@ -11,4 +11,11 @@
 
 .slide-counter p {
   margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .slide-counter {
+    bottom: auto;
+    top: 175px;
+  }
 }

@@ -73,7 +73,8 @@ export default class App extends Component {
       ];
       return {
         data: newData,
-        inputValue: ''
+        inputValue: '',
+        slideRenderChange: true
       }
     })
   }

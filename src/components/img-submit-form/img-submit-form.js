@@ -8,11 +8,11 @@ const ImgSubmitForm = ({handleSubmit, handleChange, inputValue}) => {
         <input 
           type="text" 
           placeholder="Add img URL" 
-          className="img-url-input" 
+          className="img-url-input input" 
           onChange={handleChange}
           value={inputValue}
         />
-        <button className="add-task-button" type="type">Add</button>
+        <button className="add-img-button button" type="type">Add</button>
       </form>
     </div>
   )

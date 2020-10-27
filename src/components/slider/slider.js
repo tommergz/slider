@@ -8,6 +8,8 @@ export default class App extends Component {
     way: 0
   }
 
+  swipe = 0;
+
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.currentDataIndex !== nextProps.currentDataIndex ||
      this.props.slideWay !== nextProps.slideWay || 
@@ -78,6 +80,23 @@ export default class App extends Component {
     }
   }
 
+  handleTouchStart = (e) => {
+    const x = e.touches[0];
+    this.swipe = x.pageX
+  }
+
+  handleTouchEnd = (e) => {
+    const x = e.changedTouches[0].pageX;
+    const swipeLength = x - this.swipe;
+    if (Math.abs(swipeLength) > 50) {
+      if (swipeLength > 0) {
+        this.props.prevSlide()
+      } else {
+        this.props.nextSlide()
+      }
+    }
+  }
+
   render() {
     const {data, currentDataIndex, prevSlide, nextSlide, slideWay, switchToSlideX, slideRenderChange} = this.props;
     const {way} = this.state;
@@ -87,8 +106,8 @@ export default class App extends Component {
       transform: `translateX(${slideWay/numberOfSlides}%)`
     };
     if (slideRenderChange && way === 0) {  
-        swipeStyles = this.props.multipleSlides ? {transform: `translateX(-50%)`} : 
-        {transform: `translateX(-100%)`}      
+      swipeStyles = this.props.multipleSlides ? {transform: `translateX(-50%)`} : 
+      {transform: `translateX(-100%)`}      
     }
     else if (way !== 0 && !switchToSlideX) {
       const swipeWidth = slideWay + way;
@@ -101,7 +120,12 @@ export default class App extends Component {
     // console.log(this.multipleSlides)
     return(
       <div className="slider-wrapper">
-        <div className={"slider"} style={swipeStyles}>
+        <div 
+          className={"slider"} 
+          style={swipeStyles} 
+          onTouchStart={this.handleTouchStart}
+          onTouchEnd={this.handleTouchEnd}
+        >
           {slides}
         </div>
         <button className="button prev-button" onClick={prevSlide}>PREV</button>
