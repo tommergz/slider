@@ -3,3 +3,21 @@
   bottom: 70px;
   z-index: 1;
 }
+
+.slide-number-input {
+  width: 130px;
+}
+
+/* @media (min-height: 1000px) {
+  .slide-switcher-wrapper {
+    bottom: auto;
+    top: 140px;
+  }
+}   */
+
+@media (max-width: 1000px) {
+  .slide-switcher-wrapper {
+    top: 145px;
+    bottom: auto;
+  }
+}

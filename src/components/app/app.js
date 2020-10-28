@@ -5,6 +5,7 @@ import ImgSubmitForm from '../img-submit-form/img-submit-form';
 import SlideSwitcher from '../slide-switcher/slide-switcher';
 import SlideCounter from '../slide-counter/slide-counter';
 import SlideRenderSetting from '../slide-render-setting/slide-render-setting';
+import Toolkit from '../toolkit/toolkit';
 
 export default class App extends Component {
   
@@ -24,7 +25,8 @@ export default class App extends Component {
     slideValue: '',
     switchToSlideX: false,
     multipleSlides: false,
-    slideRenderChange: false, 
+    slideRenderChange: false,
+    toolkit: true 
   }
 
   prevSlide = () => {
@@ -105,6 +107,14 @@ export default class App extends Component {
     })
   }
 
+  setting = () => {
+    this.setState(({toolkit}) => {
+      return {
+        toolkit: !toolkit
+      }
+    })
+  }
+
   render() {
     const {
       data, 
@@ -115,22 +125,30 @@ export default class App extends Component {
       slideValue, 
       switchToSlideX,
       multipleSlides,
-      slideRenderChange} = this.state;
+      slideRenderChange,
+      toolkit} = this.state;
     return(
       <div className="app-wrapper">
+        <Toolkit 
+          setting={this.setting}
+          toolkit={toolkit}
+        />
         <SlideRenderSetting 
           multipleSlides={multipleSlides}
           slideRenderSwitcher={this.slideRenderSwitcher}
+          toolkit={toolkit}
         />
         <ImgSubmitForm
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           inputValue={inputValue}
+          toolkit={toolkit}
         />
         <SlideSwitcher 
           handleSlideValueChange={this.handleSlideValueChange}
           goToSlideX={this.goToSlideX}
           slideValue={slideValue}
+          toolkit={toolkit}
         />
         <Slider 
           data={data}
@@ -148,6 +166,7 @@ export default class App extends Component {
           currentDataIndex={currentDataIndex}
           data={data}
           multipleSlides={multipleSlides}
+          toolkit={toolkit}
         />
       </div>
     )

@@ -40,7 +40,7 @@ export default class App extends Component {
   getWidth = () => window.innerWidth;
 
   makeSlides = (data, currentDataIndex) => {
-    const slideStyle = this.props.multipleSlides ? 'multi-slide' : 'slide'
+    const slideStyle = this.props.multipleSlides ? 'multi-slide' : 'slide';
     const slidesMap = (arr) => {
       return arr.map((item, index) => {
         return (
@@ -117,7 +117,7 @@ export default class App extends Component {
       }
     }
     if (data.length === 1) swipeStyles = {transform: `translateX(0)`} 
-    // console.log(this.multipleSlides)
+
     return(
       <div className="slider-wrapper">
         <div 

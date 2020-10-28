@@ -1,0 +1,10 @@
+.toolkit {
+  position: absolute;
+  z-index: 1;
+  left: 50px;
+  top: 35px;
+}
+
+.toolkit-lighting {
+  color: rgb(7, 255, 7);
+}

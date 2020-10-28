@@ -1,6 +1,6 @@
 .slide-render-setting-wrapper {
   position: absolute;
-  left: 50px;
+  right: 50px;
   top: 35px;
   z-index: 1;
   background-color: rgb(3, 5, 5);
@@ -46,16 +46,3 @@
   background-image:
     linear-gradient(rgb(100, 109, 114), rgb(99, 114, 126));
 }
-
-@media (max-width: 1200px) {
-  .slide-render-setting-wrapper {
-    left: auto;
-  }
-}
-
-@media (max-width: 1000px) {
-  .slide-switcher-wrapper {
-    bottom: auto;
-    top: 140px;
-  }
-}  

@@ -1,13 +1,15 @@
 import React from 'react';
 import './slide-counter.css';
 
-const SlideCounter = ({currentDataIndex, data, multipleSlides}) => {
+const SlideCounter = ({currentDataIndex, data, multipleSlides, toolkit}) => {
+  const counterPosition = !toolkit ? ' counter-position' : '';
   let secondSlide;
+
   if (multipleSlides) {
     secondSlide = currentDataIndex === data.length - 1 ? 1 : currentDataIndex + 2
   }
   return(
-    <div className="slide-counter">
+    <div className={"slide-counter" + counterPosition}>
       {multipleSlides && data.length > 1 ?
         <p>{currentDataIndex + 1},{secondSlide}/{data.length}</p> :
         <p>{currentDataIndex + 1}/{data.length}</p>
