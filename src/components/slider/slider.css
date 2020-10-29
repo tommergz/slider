@@ -49,21 +49,25 @@
   right: 3%;
 }
 
-.e {
-  background-color: royalblue;
+.slide-button {
+  height: 50px;
 }
 
-/* @media (max-width: 1000px) {
-  .slider-wrapper {
-    align-items: flex-start;
+@media (max-width: 800px) {
+  .slide-button {
+    height: 35px;
   }
+}
 
-  .slider {
-    align-items: flex-start;
-    margin-top: 250px;
+@media (max-width: 400px) {
+  .slide-button {
+    height: 30px;
   }
+}
 
-  .button {
-    top: 100px;
+@media (max-width: 400px) {
+  .slide-button {
+    height: 25px;
+    font-size: small;
   }
-}   */
+}

@@ -29,10 +29,7 @@
   outline: none;
   border-right: 1px solid rgba(13,20,27,.5);
   background-color: rgb(64,73,82);
-  background-image:
-    radial-gradient(1px 60% at 0% 50%, rgba(255,255,255,.3), transparent),
-    radial-gradient(1px 60% at 100% 50%, rgba(255,255,255,.3), transparent),
-    linear-gradient(rgb(64,73,82), rgb(72,81,90));
+
 }
 .slide-render-setting-button:hover {
   background-image:
@@ -44,5 +41,12 @@
 .disabled {
   pointer-events: none;
   background-image:
-    linear-gradient(rgb(100, 109, 114), rgb(99, 114, 126));
+    linear-gradient(rgb(100, 109, 114), rgb(99, 114, 126)) !important;
+}
+
+@media (max-width: 400px) {
+  .slide-render-setting-wrapper {
+    top: 80px;
+    right: auto;
+  }
 }

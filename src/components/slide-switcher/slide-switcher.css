@@ -15,9 +15,15 @@
   }
 }   */
 
-@media (max-width: 1000px) {
+@media (max-width: 800px) {
   .slide-switcher-wrapper {
     top: 145px;
     bottom: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .slide-switcher-wrapper {
+    top: 190px;
   }
 }

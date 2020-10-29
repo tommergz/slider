@@ -1,9 +1,21 @@
 .form-wrapper {
+  width: 80%;
   position: absolute;
   top: 100px;
   z-index: 1;
 }
 
+.form {
+  display: flex;
+  justify-content: center;
+}
+
 .img-url-input {
   width: 500px;
+}
+
+@media (max-width: 400px) {
+  .form-wrapper {
+    top: 145px;
+  }
 }

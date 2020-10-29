@@ -50,7 +50,7 @@ export default class App extends Component {
         )
       })
     }
-    console.log(currentDataIndex)
+
     const allData = [...data];
     let newData = [];
     const length = allData.length;
@@ -128,8 +128,8 @@ export default class App extends Component {
         >
           {slides}
         </div>
-        <button className="button prev-button" onClick={prevSlide}>PREV</button>
-        <button className="button next-button" onClick={nextSlide}>NEXT</button>
+        <button className="button prev-button slide-button" onClick={prevSlide}>PREV</button>
+        <button className="button next-button slide-button" onClick={nextSlide}>NEXT</button>
       </div>
     )
   }
