@@ -53,8 +53,6 @@ export default class App extends Component {
     }
   }
 
-  getWidth = () => window.innerWidth;
-
   getSlideWidth = () => {
     this.setState({
       slideWay: -100
