@@ -15,7 +15,8 @@ You can either use the demo or set the app up on your computer
 6. Use 'npm run build' to build the project
 
 ### Using the app:
-add links to the images into the form and use the tools to view the images
+add links to the images into the form and use the tools to view the images 
+(link example: https://images.unsplash.com/photo-1603996331944-dcb02c639178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80)
 
 ### Tasks: 
 #### Done:
