@@ -3,7 +3,7 @@ import { Component } from 'react';
 import './slider.css';
 import SlideRenderingService from '../../services/slide-rendering-service';
 
-export default class App extends Component {
+export default class Slider extends Component {
 
   state = {
     way: 0
