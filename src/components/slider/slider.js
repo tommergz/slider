@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import './slider.css';
-import SlideRenderingService from './services/slide-rendering-service';
+import SlideRenderingService from './slider-services/slide-rendering-service';
 import SlideRenderSetting from './slide-render-setting/slide-render-setting';
 import ImgSubmitForm from './img-submit-form/img-submit-form';
 import SlideSwitcher from './slide-switcher/slide-switcher';
