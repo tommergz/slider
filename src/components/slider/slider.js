@@ -1,7 +1,12 @@
 import React from 'react';
 import { Component } from 'react';
 import './slider.css';
-import SlideRenderingService from '../../services/slide-rendering-service';
+import SlideRenderingService from './services/slide-rendering-service';
+import SlideRenderSetting from './slide-render-setting/slide-render-setting';
+import ImgSubmitForm from './img-submit-form/img-submit-form';
+import SlideSwitcher from './slide-switcher/slide-switcher';
+import SlideCounter from './slide-counter/slide-counter';
+import Toolkit from './toolkit/toolkit';
 
 export default class Slider extends Component {
 
@@ -16,6 +21,9 @@ export default class Slider extends Component {
      this.props.slideWay !== nextProps.slideWay || 
      this.props.multipleSlides !== nextProps.multipleSlides ||
      this.props.data !== nextProps.data ||
+     this.props.slideValue !== nextProps.slideValue ||
+     this.props.inputValue !== nextProps.inputValue ||
+     this.props.toolkit !== nextProps.toolkit || 
      nextState.way !== 0
   }
 
@@ -58,7 +66,24 @@ export default class Slider extends Component {
   }
 
   render() {
-    const {data, currentDataIndex, prevSlide, nextSlide, slideWay, switchToSlideX, slideRenderChange} = this.props;
+    const {
+      data, 
+      currentDataIndex, 
+      prevSlide, 
+      nextSlide, 
+      slideWay, 
+      setting,
+      slideRenderSwitcher,
+      switchToSlideX, 
+      slideRenderChange,
+      handleSlideValueChange,
+      goToSlideX,
+      slideValue,
+      toolkit,
+      handleChange,
+      handleSubmit,
+      inputValue,
+      multipleSlides } = this.props;
     const {way} = this.state;
 
     const slides = this.slideRenderingService.makeSlides(data, currentDataIndex, this.props.multipleSlides);
@@ -92,6 +117,33 @@ export default class Slider extends Component {
         </div>
         <button className="button prev-button slide-button" onClick={prevSlide}>PREV</button>
         <button className="button next-button slide-button" onClick={nextSlide}>NEXT</button>
+        <Toolkit 
+          setting={setting}
+          toolkit={toolkit}
+        />
+        <SlideRenderSetting 
+          multipleSlides={multipleSlides}
+          slideRenderSwitcher={slideRenderSwitcher}
+          toolkit={toolkit}
+        />
+        <ImgSubmitForm
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          inputValue={inputValue}
+          toolkit={toolkit}
+        />
+        <SlideSwitcher 
+          handleSlideValueChange={handleSlideValueChange}
+          goToSlideX={goToSlideX}
+          slideValue={slideValue}
+          toolkit={toolkit}
+        />
+        <SlideCounter 
+          currentDataIndex={currentDataIndex}
+          data={data}
+          multipleSlides={multipleSlides}
+          toolkit={toolkit}
+        />
       </div>
     )
   }

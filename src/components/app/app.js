@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import './app.css';
 import Slider from '../slider/slider';
-import ImgSubmitForm from '../img-submit-form/img-submit-form';
-import SlideSwitcher from '../slide-switcher/slide-switcher';
-import SlideCounter from '../slide-counter/slide-counter';
-import SlideRenderSetting from '../slide-render-setting/slide-render-setting';
-import Toolkit from '../toolkit/toolkit';
 
 export default class App extends Component {
   
@@ -124,30 +119,9 @@ export default class App extends Component {
       switchToSlideX,
       multipleSlides,
       slideRenderChange,
-      toolkit} = this.state;
+      toolkit } = this.state;
     return(
       <div className="app-wrapper">
-        <Toolkit 
-          setting={this.setting}
-          toolkit={toolkit}
-        />
-        <SlideRenderSetting 
-          multipleSlides={multipleSlides}
-          slideRenderSwitcher={this.slideRenderSwitcher}
-          toolkit={toolkit}
-        />
-        <ImgSubmitForm
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          inputValue={inputValue}
-          toolkit={toolkit}
-        />
-        <SlideSwitcher 
-          handleSlideValueChange={this.handleSlideValueChange}
-          goToSlideX={this.goToSlideX}
-          slideValue={slideValue}
-          toolkit={toolkit}
-        />
         <Slider 
           data={data}
           currentDataIndex={currentDataIndex}
@@ -156,15 +130,21 @@ export default class App extends Component {
           slide={slide}
           slideWay={slideWay}
           getSlideWidth={this.getSlideWidth}
+          setting={this.setting}
+          multipleSlides={multipleSlides}
+          slideRenderSwitcher={this.slideRenderSwitcher}
           switchToSlideX={switchToSlideX}
           multipleSlides={multipleSlides}
           slideRenderChange={slideRenderChange}
-        />
-        <SlideCounter 
-          currentDataIndex={currentDataIndex}
-          data={data}
-          multipleSlides={multipleSlides}
+          handleSlideValueChange={this.handleSlideValueChange}
+          goToSlideX={this.goToSlideX}
+          slideValue={slideValue}
           toolkit={toolkit}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          inputValue={inputValue}
+          currentDataIndex={currentDataIndex}
+          multipleSlides={multipleSlides}
         />
       </div>
     )
