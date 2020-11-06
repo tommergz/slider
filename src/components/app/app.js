@@ -18,29 +18,25 @@ export default class App extends Component {
     currentDataIndex: 4,
     slide: -100,
     transitionXstyle: 0,
-    slideWay: 0,
     inputValue: '',
     slideValue: '',
     switchToSlideX: false,
     multipleSlides: false,
-    slideRenderChange: false,
     toolkit: true,
     slideDifference: 0
   }
 
   moveLeft = () => {
-    this.setState({
-      slide: 0,
-      transitionXstyle: 2.5,
-      slideRenderChange: false,
-    })
+    this.setState((state) => ({
+      slide: state.multipleSlides ? state.slideDifference > 1 ? 0 : -50 : 0,
+      transitionXstyle: 0.5
+    }))
   }
 
   moveRight = () => {
     this.setState((state) => ({
-      slide: state.multipleSlides ? state.slideDifference < -1 ? -150 : -100 : -200,
-      transitionXstyle: 2.5,
-      slideRenderChange: false
+      slide: state.multipleSlides ? state.slideDifference < -1 ? -200 : -150 : -200,
+      transitionXstyle: 0.5
     }))
   }
 
@@ -48,8 +44,7 @@ export default class App extends Component {
     if (this.state.data.length > 1) {
       this.setState( (state) => ({
         currentDataIndex : state.currentDataIndex > 0 ? state.currentDataIndex - 1 : state.data.length - 1,
-        slide: state.multipleSlides ? -50 : -100,
-        // slideWay: -200,
+        slide: -100,
         switchToSlideX: false,
         transitionXstyle: 0
       }) ) 
@@ -60,18 +55,11 @@ export default class App extends Component {
     if (this.state.data.length > 1) {
       this.setState( (state) => ({
         currentDataIndex : state.currentDataIndex < state.data.length - 1 ? state.currentDataIndex + 1 : 0,
-        slide: state.multipleSlides ? -50 : -100,
-        // slideWay: 0,
+        slide: -100,
         switchToSlideX: false,
         transitionXstyle: 0
       }) ) 
     }
-  }
-
-  getSlideWidth = () => {
-    this.setState({
-      slideWay: -100
-    })
   }
 
   handleChange = (e) => {
@@ -88,8 +76,7 @@ export default class App extends Component {
       ];
       return {
         data: newData,
-        inputValue: '',
-        slideRenderChange: true
+        inputValue: ''
       }
     })
   }
@@ -101,7 +88,7 @@ export default class App extends Component {
   moveToSlideX = (e) => {
     e.preventDefault();
     const x = Number(this.state.slideValue) - 1;
-    if (x > -1 && x < this.state.data.length) {
+    if (x > -1 && x < this.state.data.length && x !== this.state.currentDataIndex) {
       const difference = this.state.currentDataIndex - (Number(this.state.slideValue) - 1)
       this.setState({
         switchToSlideX: true,
@@ -111,12 +98,10 @@ export default class App extends Component {
   }
 
   goToSlideX = () => {
-    // e.preventDefault();
     const x = Number(this.state.slideValue) - 1;
     this.setState((state) => ({
       currentDataIndex: x,
-      slide: state.multipleSlides ? -50 : -100,
-      // slideWay: -100,
+      slide: -100,
       slideValue: '',
       switchToSlideX: false,
       transitionXstyle: 0,
@@ -127,8 +112,7 @@ export default class App extends Component {
   slideRenderSwitcher = () => {
     this.setState(({multipleSlides}) => {
       return {
-        multipleSlides: !multipleSlides,
-        slideRenderChange: true
+        multipleSlides: !multipleSlides
       }
     })
   }
@@ -147,12 +131,10 @@ export default class App extends Component {
       currentDataIndex, 
       slide, 
       transitionXstyle,
-      slideWay, 
       inputValue, 
       slideValue, 
       switchToSlideX,
       multipleSlides,
-      slideRenderChange,
       toolkit,
       slideDifference } = this.state;
     return(
@@ -166,14 +148,12 @@ export default class App extends Component {
           nextSlide={this.nextSlide}
           slide={slide}
           transitionXstyle={transitionXstyle}
-          slideWay={slideWay}
           getSlideWidth={this.getSlideWidth}
           setting={this.setting}
           multipleSlides={multipleSlides}
           slideRenderSwitcher={this.slideRenderSwitcher}
           switchToSlideX={switchToSlideX}
           multipleSlides={multipleSlides}
-          slideRenderChange={slideRenderChange}
           handleSlideValueChange={this.handleSlideValueChange}
           goToSlideX={this.goToSlideX}
           slideValue={slideValue}

@@ -28,22 +28,28 @@ export default class SlideRenderingService {
 
       if (switchToSlideX && addExtraSlides) {
         const nextSlides = allData.slice(i - 1, i + 1);
-        if (slideDifference < -1) {
-          newData = allData.slice(currentDataIndex, currentDataIndex + 2);
-          if (!currentDataIndex) newData.unshift(...allData.slice(-1));
-          if (currentDataIndex) newData.unshift(currentDataIndex - 1);
-          if (i === length) {
+        if (Math.abs(slideDifference) > 1) { 
+
+          if (currentDataIndex === length - 1) {
             newData.push(allData[length - 1])
             newData.push(allData[0])
           } else {
+            newData = allData.slice(currentDataIndex, currentDataIndex + 2);
+          }               
+
+          if (i === length) {
+            newData.unshift(allData[length - 1])
+            newData.unshift(allData[0])     
+            newData.push(allData[length - 1])
+            newData.push(allData[0])
+          } else {
+            newData.unshift(...nextSlides);
             newData.push(...nextSlides);
           }       
+          
           return slidesMap(newData)
+
         } 
-        else if (slideDifference > 1) {
-          newData = allData.slice(currentDataIndex, currentDataIndex + 2);
-          newData.unshift(...nextSlides)
-        }
       }
 
   //\\ MULTI
@@ -59,20 +65,39 @@ export default class SlideRenderingService {
       
       if (currentDataIndex === 0) {
         newData = allData.slice(0, extraSlides);
-        newData.unshift(allData[allData.length-1]);
+        if (addExtraSlides) {
+          newData.unshift(...allData.slice(-2));
+        } else {
+          newData.unshift(allData[allData.length-1]);
+        }
         if (addExtraSlides) {
           newData.push(allData[0])
         }
-      } else if (currentDataIndex === allData.length - 1) {
+      } else if (currentDataIndex === length - 1) {
         newData = allData.slice(-2)
         newData.push(allData[0])
-        if (addExtraSlides) newData.push(allData[1])
-      } else {
+        if (addExtraSlides) {
+          newData.push(allData[1])
+          if (length > 2) newData.unshift(currentDataIndex - 2)
+          else newData.unshift(allData[length - 1])
+        }
+      }  else {
         if (currentDataIndex === length - 2 && addExtraSlides) {
-          newData = allData.slice(currentDataIndex - 1, currentDataIndex + 2)
+          newData = allData.slice(currentDataIndex, currentDataIndex + 2)
           newData.push(allData[0])
+          if (length === 2) {
+            newData.unshift(...allData.slice(-2))
+          }
+          else if (length === 3) {
+            newData.unshift(allData[0])
+            newData.unshift(...allData.slice(-1))
+          }
+          else {
+            newData.unshift(...allData.slice(currentDataIndex - 2, currentDataIndex))
+          }
         } else {
           newData = allData.slice(currentDataIndex - 1, currentDataIndex + extraSlides)
+          if (addExtraSlides) newData.unshift(allData[currentDataIndex - 2])
         }        
       }       
       return slidesMap(newData);

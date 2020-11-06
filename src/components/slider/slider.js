@@ -18,11 +18,8 @@ export default class Slider extends Component {
     if (this.props.switchToSlideX) {
       this.props.goToSlideX()
     } else {
-      if (this.props.slide === 0) setTimeout(() => this.props.prevSlide())
-      else if ( 
-        (this.props.slide < -100 && !this.props.multipleSlides) || 
-        (this.props.slide < -50 && this.props.multipleSlides) 
-      ) {
+      if (this.props.slide === 0 || this.props.slide === -50) setTimeout(() => this.props.prevSlide())
+      else if (this.props.slide < -100) {
         setTimeout(() => this.props.nextSlide())
       }
     }
@@ -35,10 +32,11 @@ export default class Slider extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.switchToSlideX && this.props.switchToSlideX !== prevProps.switchToSlideX) {
-      if (this.props.currentDataIndex - this.props.slideValue > 0) {
+      const value = this.props.slideValue - 1;
+      if (this.props.currentDataIndex - value > 0) {
         this.props.moveLeft()
       }
-      else if (this.props.currentDataIndex - this.props.slideValue < 0) {
+      else if (this.props.currentDataIndex - value < 0) {
         this.props.moveRight()
       }
     }
@@ -72,7 +70,6 @@ export default class Slider extends Component {
       setting,
       slideRenderSwitcher,
       switchToSlideX, 
-      slideRenderChange,
       handleSlideValueChange,
       goToSlideX,
       slideValue,
@@ -90,19 +87,6 @@ export default class Slider extends Component {
       transform: `translateX(${slide}%)`,
       transition: `transform ease-out ${transitionXstyle}s`
     };
-
-    if (slideRenderChange) {  
-      swipeStyles = this.props.multipleSlides ? 
-        {transform: `translateX(-50%)`} : 
-        {transform: `translateX(-100%)`}      
-    }
-
-    // if (this.props.slideDifference > 1 && this.props.multipleSlides) {
-    //   swipeStyles = {
-    //     transform: `translateX(-100%)`,
-    //     transition: `transform ease-out 0s`
-    //   }
-    // } 
 
     return(
       <div className="slider-wrapper">
