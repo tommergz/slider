@@ -10,43 +10,39 @@ import Toolkit from './toolkit/toolkit';
 
 export default class Slider extends Component {
 
-  state = {
-    way: 0
-  }
-
   swipe = 0;
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.currentDataIndex !== nextProps.currentDataIndex ||
-     this.props.slideWay !== nextProps.slideWay || 
-     this.props.multipleSlides !== nextProps.multipleSlides ||
-     this.props.data !== nextProps.data ||
-     this.props.slideValue !== nextProps.slideValue ||
-     this.props.inputValue !== nextProps.inputValue ||
-     this.props.toolkit !== nextProps.toolkit || 
-     nextState.way !== 0
-  }
+  slideRenderingService = new SlideRenderingService();
 
-  componentDidMount() {
-    this.props.getSlideWidth()
-  }
-
-  componentDidUpdate() {
-    let slideSide = this.props.slide === 0 ? 0 : this.props.slide < 0 ? -100 : 100;
-    if (slideSide !== this.state.way) {
-      setTimeout(() => {
-        this.setState({
-          way: slideSide
-        })
-      })
+  newSliderPosition = () => {
+    if (this.props.switchToSlideX) {
+      this.props.goToSlideX()
     } else {
-      this.setState({
-        way: 0
-      })
+      if (this.props.slide === 0) setTimeout(() => this.props.prevSlide())
+      else if ( 
+        (this.props.slide < -100 && !this.props.multipleSlides) || 
+        (this.props.slide < -50 && this.props.multipleSlides) 
+      ) {
+        setTimeout(() => this.props.nextSlide())
+      }
     }
   }
 
-  slideRenderingService = new SlideRenderingService();
+  componentDidMount() {
+    const sliderBlock = document.getElementById('slider')
+    sliderBlock.addEventListener('transitionend', this.newSliderPosition)    
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.switchToSlideX && this.props.switchToSlideX !== prevProps.switchToSlideX) {
+      if (this.props.currentDataIndex - this.props.slideValue > 0) {
+        this.props.moveLeft()
+      }
+      else if (this.props.currentDataIndex - this.props.slideValue < 0) {
+        this.props.moveRight()
+      }
+    }
+  }
   
   handleTouchStart = (e) => {
     const x = e.touches[0];
@@ -69,9 +65,10 @@ export default class Slider extends Component {
     const {
       data, 
       currentDataIndex, 
-      prevSlide, 
-      nextSlide, 
-      slideWay, 
+      slide,
+      transitionXstyle,
+      moveLeft,
+      moveRight, 
       setting,
       slideRenderSwitcher,
       switchToSlideX, 
@@ -83,31 +80,34 @@ export default class Slider extends Component {
       handleChange,
       handleSubmit,
       inputValue,
-      multipleSlides } = this.props;
-    const {way} = this.state;
+      multipleSlides,
+      moveToSlideX,
+      slideDifference } = this.props;
 
-    const slides = this.slideRenderingService.makeSlides(data, currentDataIndex, this.props.multipleSlides);
+    const slides = this.slideRenderingService.makeSlides(data, currentDataIndex, this.props.multipleSlides, switchToSlideX, slideValue, slideDifference);
     
-    const numberOfSlides = this.props.multipleSlides ? 2 : 1;
     let swipeStyles = {
-      transform: `translateX(${slideWay/numberOfSlides}%)`
+      transform: `translateX(${slide}%)`,
+      transition: `transform ease-out ${transitionXstyle}s`
     };
-    if (slideRenderChange && way === 0) {  
-      swipeStyles = this.props.multipleSlides ? {transform: `translateX(-50%)`} : 
-      {transform: `translateX(-100%)`}      
+
+    if (slideRenderChange) {  
+      swipeStyles = this.props.multipleSlides ? 
+        {transform: `translateX(-50%)`} : 
+        {transform: `translateX(-100%)`}      
     }
-    else if (way !== 0 && !switchToSlideX) {
-      const swipeWidth = slideWay + way;
-      swipeStyles = {
-        transform: `translateX(${swipeWidth/numberOfSlides}%)`,
-        transition: `transform ease-out 0.45s`
-      }
-    }
-    if (data.length === 1) swipeStyles = {transform: `translateX(0)`} 
+
+    // if (this.props.slideDifference > 1 && this.props.multipleSlides) {
+    //   swipeStyles = {
+    //     transform: `translateX(-100%)`,
+    //     transition: `transform ease-out 0s`
+    //   }
+    // } 
 
     return(
       <div className="slider-wrapper">
         <div 
+          id={"slider"}
           className={"slider"} 
           style={swipeStyles} 
           onTouchStart={this.handleTouchStart}
@@ -115,8 +115,8 @@ export default class Slider extends Component {
         >
           {slides}
         </div>
-        <button className="button prev-button slide-button" onClick={prevSlide}>PREV</button>
-        <button className="button next-button slide-button" onClick={nextSlide}>NEXT</button>
+        <button className="button prev-button slide-button" onClick={moveLeft}>PREV</button>
+        <button className="button next-button slide-button" onClick={moveRight}>NEXT</button>
         <Toolkit 
           setting={setting}
           toolkit={toolkit}
@@ -137,6 +137,8 @@ export default class Slider extends Component {
           goToSlideX={goToSlideX}
           slideValue={slideValue}
           toolkit={toolkit}
+
+          moveToSlideX={moveToSlideX}
         />
         <SlideCounter 
           currentDataIndex={currentDataIndex}

@@ -11,27 +11,47 @@ export default class App extends Component {
       'https://images.unsplash.com/photo-1539191863632-8caef441bfc2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80',
       'https://images.unsplash.com/photo-1588095938732-5463642ce960?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
       'https://images.unsplash.com/photo-1550934172-beb213c78c11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-      'https://images.unsplash.com/photo-1568164651648-d90699a5182d?ixlib=rb-1.2.1&auto=format&fit=crop&w=966&q=80'
+      'https://images.unsplash.com/photo-1568164651648-d90699a5182d?ixlib=rb-1.2.1&auto=format&fit=crop&w=966&q=80',
+      'https://images.unsplash.com/photo-1604599340287-2042e85a3802?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80',
+      'https://images.unsplash.com/photo-1588343710499-948bbeb14ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=1189&q=80'
     ],
-    currentDataIndex: 0,
-    slide: 0,
+    currentDataIndex: 4,
+    slide: -100,
+    transitionXstyle: 0,
     slideWay: 0,
     inputValue: '',
     slideValue: '',
     switchToSlideX: false,
     multipleSlides: false,
     slideRenderChange: false,
-    toolkit: true 
+    toolkit: true,
+    slideDifference: 0
+  }
+
+  moveLeft = () => {
+    this.setState({
+      slide: 0,
+      transitionXstyle: 2.5,
+      slideRenderChange: false,
+    })
+  }
+
+  moveRight = () => {
+    this.setState((state) => ({
+      slide: state.multipleSlides ? state.slideDifference < -1 ? -150 : -100 : -200,
+      transitionXstyle: 2.5,
+      slideRenderChange: false
+    }))
   }
 
   prevSlide = () => {
     if (this.state.data.length > 1) {
       this.setState( (state) => ({
         currentDataIndex : state.currentDataIndex > 0 ? state.currentDataIndex - 1 : state.data.length - 1,
-        slide: 100,
-        slideWay: -200,
+        slide: state.multipleSlides ? -50 : -100,
+        // slideWay: -200,
         switchToSlideX: false,
-        slideRenderChange: false
+        transitionXstyle: 0
       }) ) 
     }
   }
@@ -40,10 +60,10 @@ export default class App extends Component {
     if (this.state.data.length > 1) {
       this.setState( (state) => ({
         currentDataIndex : state.currentDataIndex < state.data.length - 1 ? state.currentDataIndex + 1 : 0,
-        slide: -100,
-        slideWay: 0,
+        slide: state.multipleSlides ? -50 : -100,
+        // slideWay: 0,
         switchToSlideX: false,
-        slideRenderChange: false
+        transitionXstyle: 0
       }) ) 
     }
   }
@@ -78,17 +98,30 @@ export default class App extends Component {
     this.setState({slideValue: e.target.value});   
   }
 
-  goToSlideX = (e) => {
+  moveToSlideX = (e) => {
     e.preventDefault();
     const x = Number(this.state.slideValue) - 1;
     if (x > -1 && x < this.state.data.length) {
+      const difference = this.state.currentDataIndex - (Number(this.state.slideValue) - 1)
       this.setState({
-        currentDataIndex: x,
-        slideWay: -100,
-        slideValue: '',
         switchToSlideX: true,
+        slideDifference: difference
       })
     }
+  }
+
+  goToSlideX = () => {
+    // e.preventDefault();
+    const x = Number(this.state.slideValue) - 1;
+    this.setState((state) => ({
+      currentDataIndex: x,
+      slide: state.multipleSlides ? -50 : -100,
+      // slideWay: -100,
+      slideValue: '',
+      switchToSlideX: false,
+      transitionXstyle: 0,
+      slideDifference: 0
+    }))
   }
 
   slideRenderSwitcher = () => {
@@ -113,21 +146,26 @@ export default class App extends Component {
       data, 
       currentDataIndex, 
       slide, 
+      transitionXstyle,
       slideWay, 
       inputValue, 
       slideValue, 
       switchToSlideX,
       multipleSlides,
       slideRenderChange,
-      toolkit } = this.state;
+      toolkit,
+      slideDifference } = this.state;
     return(
       <div className="app-wrapper">
         <Slider 
           data={data}
           currentDataIndex={currentDataIndex}
+          moveLeft={this.moveLeft}
+          moveRight={this.moveRight}
           prevSlide={this.prevSlide}
           nextSlide={this.nextSlide}
           slide={slide}
+          transitionXstyle={transitionXstyle}
           slideWay={slideWay}
           getSlideWidth={this.getSlideWidth}
           setting={this.setting}
@@ -145,6 +183,9 @@ export default class App extends Component {
           inputValue={inputValue}
           currentDataIndex={currentDataIndex}
           multipleSlides={multipleSlides}
+
+          moveToSlideX={this.moveToSlideX}
+          slideDifference={slideDifference}
         />
       </div>
     )

@@ -1,11 +1,11 @@
 import React from 'react';
 import './slide-switcher.css';
 
-const SlideSwitcher = ({handleSlideValueChange, goToSlideX, slideValue, toolkit}) => {
+const SlideSwitcher = ({handleSlideValueChange, goToSlideX, slideValue, toolkit, moveToSlideX}) => {
   const visibility = toolkit ? '' : ' invisible';
   return(
     <div className={"slide-switcher-wrapper" + visibility}>
-      <form className="form" onSubmit={goToSlideX}>
+      <form className="form" onSubmit={moveToSlideX}>
         <input 
           type="text" 
           placeholder="Type slide number" 
