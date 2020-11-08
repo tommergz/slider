@@ -1,6 +1,4 @@
 .slide-switcher-wrapper {
-  position: absolute;
-  bottom: 70px;
   z-index: 1;
 }
 
@@ -8,22 +6,7 @@
   width: 130px;
 }
 
-/* @media (min-height: 1000px) {
-  .slide-switcher-wrapper {
-    bottom: auto;
-    top: 140px;
-  }
-}   */
-
-@media (max-width: 800px) {
-  .slide-switcher-wrapper {
-    top: 145px;
-    bottom: auto;
-  }
-}
-
-@media (max-width: 400px) {
-  .slide-switcher-wrapper {
-    top: 190px;
-  }
+.slide-switcher-button {
+  width: 30px;
+  height: 18px;
 }

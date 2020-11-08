@@ -51,24 +51,25 @@
 }
 
 .slide-button {
-  height: 50px;
+  width: 7%;
+  max-width: 80px;
+  height: 80px;
+}
+
+.arrow {
+  width: 80%;
+  height: 80%;
+}
+
+.slide-switcher-and-counter-block {
+  display: flex;
+  position: absolute;
+  bottom: 70px;
 }
 
 @media (max-width: 800px) {
-  .slide-button {
-    height: 35px;
-  }
-}
-
-@media (max-width: 400px) {
-  .slide-button {
-    height: 30px;
-  }
-}
-
-@media (max-width: 400px) {
-  .slide-button {
-    height: 25px;
-    font-size: small;
+  .slide-switcher-and-counter-block {
+    top: 150px;
+    bottom: auto;
   }
 }

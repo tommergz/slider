@@ -7,6 +7,8 @@ import ImgSubmitForm from './img-submit-form/img-submit-form';
 import SlideSwitcher from './slide-switcher/slide-switcher';
 import SlideCounter from './slide-counter/slide-counter';
 import Toolkit from './toolkit/toolkit';
+import leftArrow from '../../assets/icons/left-arrow.svg'
+import rightArrow from '../../assets/icons/right-arrow.svg'
 
 export default class Slider extends Component {
 
@@ -41,6 +43,28 @@ export default class Slider extends Component {
       }
     }
   }
+
+  swipeFunction = (swipeLength) => {
+    console.log(swipeLength)
+    if (Math.abs(swipeLength) > 50) {
+      if (swipeLength > 0) {
+        this.props.moveLeft()
+      } else {
+        this.props.moveRight()
+      }
+    }
+  }
+
+  handleMouseDown = (e) => {
+    e.preventDefault();
+    this.swipe = e.clientX
+  }
+
+  handleMouseUp = (e) => {
+    e.preventDefault();
+    const swipeLength = e.clientX - this.swipe;
+    this.swipeFunction(swipeLength)
+  }
   
   handleTouchStart = (e) => {
     const x = e.touches[0];
@@ -50,13 +74,7 @@ export default class Slider extends Component {
   handleTouchEnd = (e) => {
     const x = e.changedTouches[0].pageX;
     const swipeLength = x - this.swipe;
-    if (Math.abs(swipeLength) > 50) {
-      if (swipeLength > 0) {
-        this.props.prevSlide()
-      } else {
-        this.props.nextSlide()
-      }
-    }
+    this.swipeFunction(swipeLength)
   }
 
   render() {
@@ -96,11 +114,17 @@ export default class Slider extends Component {
           style={swipeStyles} 
           onTouchStart={this.handleTouchStart}
           onTouchEnd={this.handleTouchEnd}
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
         >
           {slides}
         </div>
-        <button className="button prev-button slide-button" onClick={moveLeft}>PREV</button>
-        <button className="button next-button slide-button" onClick={moveRight}>NEXT</button>
+        <button className="button prev-button slide-button" onClick={moveLeft}>
+          <img src={leftArrow} alt="Left arrow" className="arrow"></img>
+        </button>
+        <button className="button next-button slide-button" onClick={moveRight}>
+          <img src={rightArrow} alt="Righ arrow" className="arrow"></img>
+        </button>
         <Toolkit 
           setting={setting}
           toolkit={toolkit}
@@ -116,20 +140,21 @@ export default class Slider extends Component {
           inputValue={inputValue}
           toolkit={toolkit}
         />
-        <SlideSwitcher 
-          handleSlideValueChange={handleSlideValueChange}
-          goToSlideX={goToSlideX}
-          slideValue={slideValue}
-          toolkit={toolkit}
-
-          moveToSlideX={moveToSlideX}
-        />
-        <SlideCounter 
-          currentDataIndex={currentDataIndex}
-          data={data}
-          multipleSlides={multipleSlides}
-          toolkit={toolkit}
-        />
+        <div className="slide-switcher-and-counter-block">
+          <SlideCounter 
+            currentDataIndex={currentDataIndex}
+            data={data}
+            multipleSlides={multipleSlides}
+            toolkit={toolkit}
+          />
+          <SlideSwitcher 
+            handleSlideValueChange={handleSlideValueChange}
+            goToSlideX={goToSlideX}
+            slideValue={slideValue}
+            toolkit={toolkit}
+            moveToSlideX={moveToSlideX}
+          />
+        </div>
       </div>
     )
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './app.css';
 import Slider from '../slider/slider';
+// import motik from '../../assets/content/motik.mp4';
 
 export default class App extends Component {
   
@@ -163,7 +164,6 @@ export default class App extends Component {
           inputValue={inputValue}
           currentDataIndex={currentDataIndex}
           multipleSlides={multipleSlides}
-
           moveToSlideX={this.moveToSlideX}
           slideDifference={slideDifference}
         />
