@@ -1,0 +1,9 @@
+.slide-list {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.video-icon {
+  width: 50%;
+}

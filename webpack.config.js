@@ -26,6 +26,19 @@ module.exports = {
           }
         ]
       },
+      // Loading music 
+      {
+        test: /\.(mp3)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'music',
+              use: 'file-loader?name=videos/[name].[ext]',
+            }
+          }
+        ]
+      },
       // Loading fonts
       {
         test: /\.(ttf|otf|eot|woff|woff2)$/,
@@ -43,6 +56,11 @@ module.exports = {
       {
         test: /\.(css)$/,
         use: ['style-loader', 'css-loader']
+      },
+      // HTML loader
+      {
+        test: /\.html$/,
+        use: ["html-loader"]
       }
     ]
   },

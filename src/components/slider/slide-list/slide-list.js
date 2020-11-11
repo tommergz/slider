@@ -1,13 +1,39 @@
 import React from 'react';
+import { Component } from 'react';
+import './slide-list.css';
+import videoIcon from '../../../assets/icons/video.svg';
 
-export default class SlideRenderingService {
-  makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference) => {
+export default class SlideList extends Component {
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.data !== nextProps.data || 
+    this.props.currentDataIndex !== nextProps.currentDataIndex ||
+    this.props.multipleSlides !== nextProps.multipleSlides ||
+    this.props.switchToSlideX !== nextProps.switchToSlideX || 
+    this.props.transitionXstyle !== nextProps.transitionXstyle
+  }
+
+  makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle) => {
     const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
     const slidesMap = (arr) => {
-      return arr.map((item, index) => {
+      return arr.map((item, index, array) => {
+        // let videoVisibility = array[currentDataIndex][0] === 'video' ? "visible" : "invisible";
+        let play = array[index][0] === 'video' && index === 1 ? true : false
+        let content;
+        if (item[0] === 'image') content = <img className="image" src={item[1]} />
+        else if (item[0] === 'video' && data[currentDataIndex][0] === 'video' && transitionXstyle === 0) {
+          content = <video className={"video "} src={item[1]} controls></video>
+        } 
+        else if (multipleSlides && item[0] === 'video') {
+          if (array[3][0] === 'video') {
+            content = <video className={"video "} src={item[1]} controls></video>
+          }
+        }  else {
+          content = <img className="video-icon" src={videoIcon} />
+        }
         return (
           <div key={+Date.now().toString() + index} className={slideStyle}>
-            <img className="image" src={item} />
+            {content}
           </div>
         )
       })
@@ -95,6 +121,10 @@ export default class SlideRenderingService {
           else {
             newData.unshift(...allData.slice(currentDataIndex - 2, currentDataIndex))
           }
+        }
+        else if (currentDataIndex === 1 && addExtraSlides) {
+          newData = allData.slice(currentDataIndex - 1, currentDataIndex + extraSlides);
+          newData.unshift(allData[length - 1])
         } else {
           newData = allData.slice(currentDataIndex - 1, currentDataIndex + extraSlides)
           if (addExtraSlides) newData.unshift(allData[currentDataIndex - 2])
@@ -104,5 +134,15 @@ export default class SlideRenderingService {
     } else {
       return slidesMap(newData);
     }
+  }
+
+  render() {
+    const {data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle} = this.props;
+    const slides = this.makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle);
+    return(
+      <div className="slide-list">
+        {slides}
+      </div>
+    )
   }
 }
