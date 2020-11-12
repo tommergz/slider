@@ -2,7 +2,7 @@ import React from 'react';
 import './slide-switcher.css';
 import goToSlideXsvg from '../../../assets/icons/go-to-slide-x.svg';
 
-const SlideSwitcher = ({handleSlideValueChange, goToSlideX, slideValue, toolkit, moveToSlideX}) => {
+const SlideSwitcher = ({handleSlideValueChange, slideValue, toolkit, moveToSlideX, disabledInput}) => {
   const visibility = toolkit ? '' : ' invisible';
   return(
     <div className={"slide-switcher-wrapper" + visibility}>
@@ -13,6 +13,7 @@ const SlideSwitcher = ({handleSlideValueChange, goToSlideX, slideValue, toolkit,
           className="slide-number-input input" 
           onChange={handleSlideValueChange}
           value={slideValue}
+          disabled={disabledInput}
         />
         <button className="slide-number-button button" type="type">
           <img src={goToSlideXsvg} alt="Slide switcher" className="slide-switcher-button"></img>

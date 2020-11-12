@@ -5,39 +5,36 @@ import videoIcon from '../../../assets/icons/video.svg';
 
 export default class SlideList extends Component {
 
+  componentDidMount() {
+    this.props.contentLoading(this.props.data)
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.data !== nextProps.data || 
     this.props.currentDataIndex !== nextProps.currentDataIndex ||
     this.props.multipleSlides !== nextProps.multipleSlides ||
-    this.props.switchToSlideX !== nextProps.switchToSlideX || 
-    this.props.transitionXstyle !== nextProps.transitionXstyle
+    this.props.switchToSlideX !== nextProps.switchToSlideX ||
+    this.props.showSlides !== nextProps.showSlides
   }
 
-  makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle) => {
-    const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
-    const slidesMap = (arr) => {
-      return arr.map((item, index, array) => {
-        // let videoVisibility = array[currentDataIndex][0] === 'video' ? "visible" : "invisible";
-        let play = array[index][0] === 'video' && index === 1 ? true : false
-        let content;
-        if (item[0] === 'image') content = <img className="image" src={item[1]} />
-        else if (item[0] === 'video' && data[currentDataIndex][0] === 'video' && transitionXstyle === 0) {
-          content = <video className={"video "} src={item[1]} controls></video>
-        } 
-        else if (multipleSlides && item[0] === 'video') {
-          if (array[3][0] === 'video') {
-            content = <video className={"video "} src={item[1]} controls></video>
-          }
-        }  else {
-          content = <img className="video-icon" src={videoIcon} />
-        }
-        return (
-          <div key={+Date.now().toString() + index} className={slideStyle}>
-            {content}
-          </div>
-        )
-      })
-    }
+  slidesMap = (arr) => {
+    return arr.map((item, index) => {
+      const slideStyle = this.props.multipleSlides ? 'multi-slide' : 'slide';
+      let content;
+      if (item[0] === 'image') {
+        content = <img className="image" src={item[1]} />
+      }
+      return (
+        <div key={+Date.now().toString() + index} className={slideStyle}>
+          {content}
+        </div>
+      )
+    })
+  }
+
+  makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides) => {
+    // const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
+
 
     const allData = [...data];
     let newData = [];
@@ -45,7 +42,7 @@ export default class SlideList extends Component {
     const addExtraSlides = multipleSlides;
     const extraSlides = addExtraSlides ? 3 : 2
     if (length) {
-      if (length === 1) return slidesMap(allData);
+      if (length === 1) return this.slidesMap(allData);
       const i = Number(slideValue);
 
 ////////////////////// MOVE TO SLIDE X ////////////////////////////////////
@@ -73,7 +70,7 @@ export default class SlideList extends Component {
             newData.push(...nextSlides);
           }       
           
-          return slidesMap(newData)
+          return this.slidesMap(newData)
 
         } 
       }
@@ -84,7 +81,7 @@ export default class SlideList extends Component {
         newData = allData.slice(currentDataIndex, currentDataIndex + 1);
         newData.unshift(allData[i - 1]);
         newData.push(allData[i - 1]);
-        return slidesMap(newData)
+        return this.slidesMap(newData)
       }
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\ MOVE TO SLIDE X \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -130,19 +127,34 @@ export default class SlideList extends Component {
           if (addExtraSlides) newData.unshift(allData[currentDataIndex - 2])
         }        
       }       
-      return slidesMap(newData);
+      return this.slidesMap(newData);
     } else {
-      return slidesMap(newData);
+      return this.slidesMap(newData);
     }
   }
 
   render() {
-    const {data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle} = this.props;
-    const slides = this.makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle);
-    return(
+    const {data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides} = this.props;
+    const allSlides = this.slidesMap(data);
+    const slides = this.makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides);
+
+    const content = showSlides ? 
+    <div>
       <div className="slide-list">
         {slides}
-      </div>
+      </div>  
+      <div className="full-slide-list">
+        {allSlides}
+      </div> 
+    </div> :
+    <div>
+      <div className="full-slide-list">
+        {allSlides}
+      </div> 
+    </div>
+
+    return(
+      content
     )
   }
 }

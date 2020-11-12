@@ -22,9 +22,9 @@ export default class Slider extends Component {
       ['image', 'https://images.unsplash.com/photo-1550934172-beb213c78c11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'],
       ['image', 'https://images.unsplash.com/photo-1568164651648-d90699a5182d?ixlib=rb-1.2.1&auto=format&fit=crop&w=966&q=80'],
       ['image', 'https://images.unsplash.com/photo-1604599340287-2042e85a3802?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1588343710499-948bbeb14ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=1189&q=80']
+      ['image', 'https://images.unsplash.com/photo-1588343710499-948bbeb14ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=1189&q=80'],
     ],
-    currentDataIndex: 4,
+    currentDataIndex: 3,
     slide: -100,
     transitionXstyle: 0,
     inputValue: '',
@@ -34,10 +34,32 @@ export default class Slider extends Component {
     toolkit: true,
     slideDifference: 0,
     direction: '',
-    mousePressed: false
+    mousePressed: false,
+    swipeStart: 0,
+    contentLoaded: 0,
+    showSlides: false,
+    disabledInput: false
   }
 
-  swipeStart = 0;
+  contentLoading = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      let newImg = new Image();
+      newImg.src = data[i][1];
+      newImg.onload = () => { 
+        if (this.state.contentLoaded === data.length - 1) {
+          this.setState( (state) => ({
+            // contentLoaded : state.contentLoaded + 1,
+            showSlides: true
+          }) ) 
+        }
+        else {
+          console.log(this.state.contentLoaded)
+          this.setState( (state) => ({contentLoaded : state.contentLoaded + 1}) ) 
+        }
+      }
+    }
+  }
+  
   // mousePressed = false;
 
   componentDidMount() {
@@ -62,7 +84,8 @@ export default class Slider extends Component {
       mousePressed: false,
       direction: '',
       slide: state.multipleSlides ? state.slideDifference > 1 ? 0 : -50 : 0,
-      transitionXstyle: 0.5
+      transitionXstyle: 0.5,
+      disabledInput: true
     }))
   }
 
@@ -71,7 +94,8 @@ export default class Slider extends Component {
       mousePressed: false,
       direction: '',
       slide: state.multipleSlides ? state.slideDifference < -1 ? -200 : -150 : -200,
-      transitionXstyle: 0.5
+      transitionXstyle: 0.5,
+      disabledInput: true
     }))
   }
 
@@ -81,7 +105,8 @@ export default class Slider extends Component {
         currentDataIndex : state.currentDataIndex > 0 ? state.currentDataIndex - 1 : state.data.length - 1,
         slide: -100,
         switchToSlideX: false,
-        transitionXstyle: 0
+        transitionXstyle: 0,
+        disabledInput: false
       }) ) 
     }
   }
@@ -92,7 +117,8 @@ export default class Slider extends Component {
         currentDataIndex : state.currentDataIndex < state.data.length - 1 ? state.currentDataIndex + 1 : 0,
         slide: -100,
         switchToSlideX: false,
-        transitionXstyle: 0
+        transitionXstyle: 0,
+        disabledInput: false
       }) ) 
     }
   }
@@ -104,10 +130,11 @@ export default class Slider extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const link = this.state.inputValue;
+    const newItem = ['image', link]
     this.setState(({data}) => {
       const newData = [
         ...data,
-        link
+        newItem
       ];
       return {
         data: newData,
@@ -140,7 +167,8 @@ export default class Slider extends Component {
       slideValue: '',
       switchToSlideX: false,
       transitionXstyle: 0,
-      slideDifference: 0
+      slideDifference: 0,
+      disabledInput: false
     }))
   }
 
@@ -187,13 +215,13 @@ export default class Slider extends Component {
       direction: 'center'
     })
     // this.mousePressed = true;
-    this.swipeStart = e.clientX
+    this.state.swipeStart = e.clientX
   }
 
   handleMouseMove = (e) => {
     e.preventDefault();
     if (this.state.mousePressed) {
-      const swipeLength = e.clientX - this.swipeStart;
+      const swipeLength = e.clientX - this.state.swipeStart;
       if (Math.abs(swipeLength) > 150) {
         if (swipeLength > 0) {
           this.setState({
@@ -226,7 +254,7 @@ export default class Slider extends Component {
   handleMouseUp = (e) => {
     e.preventDefault();
     // this.mousePressed = false;
-    const swipeLength = e.clientX - this.swipeStart;
+    const swipeLength = e.clientX - this.state.swipeStart;
     if (this.state.mousePressed) this.mouseUpAction(swipeLength)
   }
 
@@ -235,7 +263,7 @@ export default class Slider extends Component {
       const x = e.clientX;
       const y = e.clientY;
       const xCenter = window.innerWidth/2;
-      const yCenter = window.innerWidth/2;
+      const yCenter = window.innerHeight/2;
       
       if (x < xCenter - 60 || x > xCenter + 60 || y < yCenter - 60 || y > yCenter + 60) {
         this.setState({
@@ -248,12 +276,12 @@ export default class Slider extends Component {
   
   handleTouchStart = (e) => {
     const x = e.touches[0];
-    this.swipeStart = x.pageX
+    this.state.swipeStart = x.pageX
   }
 
   handleTouchEnd = (e) => {
     const x = e.changedTouches[0].pageX;
-    const swipeLength = x - this.swipeStart;
+    const swipeLength = x - this.state.swipeStart;
     if (Math.abs(swipeLength) > 50) this.swipeFunction(swipeLength)
   }
 
@@ -269,7 +297,9 @@ export default class Slider extends Component {
       multipleSlides,
       toolkit,
       slideDifference,
-      direction } = this.state;
+      direction,   
+      showSlides,
+      disabledInput} = this.state;
 
     let swipeStyles = {
       transform: `translateX(${slide}%)`,
@@ -296,15 +326,18 @@ export default class Slider extends Component {
             switchToSlideX={switchToSlideX}
             slideValue={slideValue}
             slideDifference={slideDifference}
-
             transitionXstyle={transitionXstyle}
+
+            contentLoading={this.contentLoading}
+            showSlides={showSlides}
           />
         </div>
         <Pointer 
           direction={direction}
           pointerMouseUp={this.pointerMouseUp}
           mouseUpAction={this.mouseUpAction}
-          swipeStart={this.swipeStart}
+          handleMouseMove={this.handleMouseMove}
+          swipeStart={this.state.swipeStart}
         />
         <button className="button prev-button slide-button" onClick={this.moveLeft}>
           <img src={leftArrow} alt="Left arrow" className="arrow"></img>
@@ -336,10 +369,10 @@ export default class Slider extends Component {
           />
           <SlideSwitcher 
             handleSlideValueChange={this.handleSlideValueChange}
-            goToSlideX={this.goToSlideX}
             slideValue={slideValue}
             toolkit={toolkit}
             moveToSlideX={this.moveToSlideX}
+            disabledInput={disabledInput}
           />
         </div>
       </div>

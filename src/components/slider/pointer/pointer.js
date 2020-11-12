@@ -4,7 +4,7 @@ import leftSwipe from '../../../assets/icons/left-swipe.svg';
 import rightSwipe from '../../../assets/icons/right-swipe.svg';
 import arrows from '../../../assets/icons/arrows.svg';
 
-const Pointer = ({direction, mouseUpAction, swipeStart}) => {
+const Pointer = ({direction, mouseUpAction, handleMouseMove, swipeStart}) => {
 
   const handleMouseUp = (e) => {
     e.preventDefault();
@@ -16,7 +16,7 @@ const Pointer = ({direction, mouseUpAction, swipeStart}) => {
   const leftSwipeVisibility = direction === 'left' ?  {display: 'block'} : {display: 'none'};
   const arrowsVisibility = direction === 'center' ?  {display: 'block'} : {display: 'none'};
   return(
-    <div className="direction" onMouseUp={handleMouseUp}>
+    <div className="direction" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <img src={leftSwipe} alt="Settings" className="swipe-arrow" style={leftSwipeVisibility}></img>
       <img src={rightSwipe} alt="Settings" className="swipe-arrow" style={rightSwipeVisibility}></img>
       <img src={arrows} alt="Settings" className="swipe-arrow" style={arrowsVisibility}></img>
