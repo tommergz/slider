@@ -38,7 +38,9 @@ export default class Slider extends Component {
     swipeStart: 0,
     contentLoaded: 0,
     showSlides: false,
-    disabledInput: false
+    disabledInput: false,
+    pointerPositionX: 0,
+    pointerPositionY: 0
   }
 
   contentLoading = (data) => {
@@ -207,33 +209,48 @@ export default class Slider extends Component {
 
   handleMouseDown = (e) => {
     e.preventDefault();
-    this.setState({
-      mousePressed: true,
-      direction: 'center'
-    })
-    // this.mousePressed = true;
-    this.state.swipeStart = e.clientX
+    if (this.state.slide === -100) {
+      this.setState({
+        mousePressed: true,
+        direction: 'center',
+        swipeStart: e.clientX
+      })
+    }
+  }
+
+  getCoords = (x, y) => {
+    if (this.state.slide === -100) {
+      this.setState({
+        pointerPositionX: x,
+        pointerPositionY: y
+      })
+    }
+  }
+
+  pointMove = (swipeLength) => {
+    if (Math.abs(swipeLength) > 150) {
+      if (swipeLength > 0) {
+        this.setState({
+          direction: 'left',
+        })
+      } else {
+        this.setState({
+          direction: 'right',
+        })
+      }
+    } else {
+      this.setState({
+        direction: 'center',
+      })    
+    }
   }
 
   handleMouseMove = (e) => {
     e.preventDefault();
+    this.getCoords(e.clientX, e.clientY);
     if (this.state.mousePressed) {
       const swipeLength = e.clientX - this.state.swipeStart;
-      if (Math.abs(swipeLength) > 150) {
-        if (swipeLength > 0) {
-          this.setState({
-            direction: 'left'
-          })
-        } else {
-          this.setState({
-            direction: 'right'
-          })
-        }
-      } else {
-        this.setState({
-          direction: 'center'
-        })    
-      }
+      this.pointMove(swipeLength)
     }
   }
 
@@ -250,7 +267,6 @@ export default class Slider extends Component {
 
   handleMouseUp = (e) => {
     e.preventDefault();
-    // this.mousePressed = false;
     const swipeLength = e.clientX - this.state.swipeStart;
     if (this.state.mousePressed) this.mouseUpAction(swipeLength)
   }
@@ -296,7 +312,9 @@ export default class Slider extends Component {
       slideDifference,
       direction,   
       showSlides,
-      disabledInput} = this.state;
+      disabledInput,
+      pointerPositionX,
+      pointerPositionY } = this.state;
 
     let swipeStyles = {
       transform: `translateX(${slide}%)`,
@@ -310,6 +328,7 @@ export default class Slider extends Component {
           className={"slider"} 
           style={swipeStyles} 
           onTouchStart={this.handleTouchStart}
+          onTouchMove={this.handleTouchMove}
           onTouchEnd={this.handleTouchEnd}
           onMouseDown={this.handleMouseDown}
           onMouseMove={this.handleMouseMove}
@@ -334,7 +353,10 @@ export default class Slider extends Component {
           pointerMouseUp={this.pointerMouseUp}
           mouseUpAction={this.mouseUpAction}
           handleMouseMove={this.handleMouseMove}
+          handleTouchMove={this.handleTouchMove}
           swipeStart={this.state.swipeStart}
+          pointerPositionX={pointerPositionX}
+          pointerPositionY={pointerPositionY}
         />
         <button className="button prev-button slide-button" onClick={this.moveLeft}>
           <img src={leftArrow} alt="Left arrow" className="arrow"></img>
