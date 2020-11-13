@@ -1,25 +1,32 @@
 import React from 'react';
-import { Component } from 'react';
+import { Component, useEffect, useMemo } from 'react';
 import './slide-list.css';
 import videoIcon from '../../../assets/icons/video.svg';
+import Loading from './loading/loading';
 
-export default class SlideList extends Component {
+const SlideList = ({
+  data, 
+  contentLoading, 
+  currentDataIndex, 
+  multipleSlides,
+  switchToSlideX,
+  slideValue, 
+  slideDifference, 
+  transitionXstyle, 
+  showSlides
+}) => {
 
-  componentDidMount() {
-    this.props.contentLoading(this.props.data)
-  }
+  useEffect(() => {
+    contentLoading(data)
+  }, []);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.data !== nextProps.data || 
-    this.props.currentDataIndex !== nextProps.currentDataIndex ||
-    this.props.multipleSlides !== nextProps.multipleSlides ||
-    this.props.switchToSlideX !== nextProps.switchToSlideX ||
-    this.props.showSlides !== nextProps.showSlides
-  }
+  useEffect(() => {
 
-  slidesMap = (arr) => {
+  }, [currentDataIndex, multipleSlides, switchToSlideX, showSlides] )
+
+  const slidesMap = (arr) => {
     return arr.map((item, index) => {
-      const slideStyle = this.props.multipleSlides ? 'multi-slide' : 'slide';
+      const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
       let content;
       if (item[0] === 'image') {
         content = <img className="image" src={item[1]} />
@@ -32,7 +39,7 @@ export default class SlideList extends Component {
     })
   }
 
-  makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides) => {
+  const makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides) => {
     // const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
 
 
@@ -42,7 +49,7 @@ export default class SlideList extends Component {
     const addExtraSlides = multipleSlides;
     const extraSlides = addExtraSlides ? 3 : 2
     if (length) {
-      if (length === 1) return this.slidesMap(allData);
+      if (length === 1) return slidesMap(allData);
       const i = Number(slideValue);
 
 ////////////////////// MOVE TO SLIDE X ////////////////////////////////////
@@ -70,7 +77,7 @@ export default class SlideList extends Component {
             newData.push(...nextSlides);
           }       
           
-          return this.slidesMap(newData)
+          return slidesMap(newData)
 
         } 
       }
@@ -81,7 +88,7 @@ export default class SlideList extends Component {
         newData = allData.slice(currentDataIndex, currentDataIndex + 1);
         newData.unshift(allData[i - 1]);
         newData.push(allData[i - 1]);
-        return this.slidesMap(newData)
+        return slidesMap(newData)
       }
 
 //\\\\\\\\\\\\\\\\\\\\\\\\\\ MOVE TO SLIDE X \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -127,34 +134,35 @@ export default class SlideList extends Component {
           if (addExtraSlides) newData.unshift(allData[currentDataIndex - 2])
         }        
       }       
-      return this.slidesMap(newData);
+      return slidesMap(newData);
     } else {
-      return this.slidesMap(newData);
+      return slidesMap(newData);
     }
   }
 
-  render() {
-    const {data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides} = this.props;
-    const allSlides = this.slidesMap(data);
-    const slides = this.makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides);
+  const allSlides = useMemo(() => slidesMap(data), [data]);
+  const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides);
+  
+  const content = showSlides ? 
+  <div>
+    <div className="slide-list">
+      {slides}
+    </div>  
+    <div className="full-slide-list">
+      {allSlides}
+    </div> 
+  </div> :
+  <div>
+    <Loading />
+    <div className="full-slide-list">
+      {allSlides}
+    </div> 
+  </div>
 
-    const content = showSlides ? 
-    <div>
-      <div className="slide-list">
-        {slides}
-      </div>  
-      <div className="full-slide-list">
-        {allSlides}
-      </div> 
-    </div> :
-    <div>
-      <div className="full-slide-list">
-        {allSlides}
-      </div> 
-    </div>
+  return(
+    content
+  )
 
-    return(
-      content
-    )
-  }
 }
+
+export default SlideList;

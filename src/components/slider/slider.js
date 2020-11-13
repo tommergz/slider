@@ -48,19 +48,16 @@ export default class Slider extends Component {
       newImg.onload = () => { 
         if (this.state.contentLoaded === data.length - 1) {
           this.setState( (state) => ({
-            // contentLoaded : state.contentLoaded + 1,
+
             showSlides: true
           }) ) 
         }
         else {
-          console.log(this.state.contentLoaded)
           this.setState( (state) => ({contentLoaded : state.contentLoaded + 1}) ) 
         }
       }
     }
   }
-  
-  // mousePressed = false;
 
   componentDidMount() {
     const sliderBlock = document.getElementById('slider')
