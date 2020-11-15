@@ -1,8 +1,8 @@
 import React from 'react';
 import './pointer.css';
-import leftSwipe from '../../../assets/icons/left-swipe.svg';
-import rightSwipe from '../../../assets/icons/right-swipe.svg';
-import arrows from '../../../assets/icons/arrows.svg';
+import leftSwipe from '../../../../assets/icons/left-swipe.svg';
+import rightSwipe from '../../../../assets/icons/right-swipe.svg';
+import arrows from '../../../../assets/icons/arrows.svg';
 
 const Pointer = ({direction, mouseUpAction, handleMouseMove, handleTouchMove, swipeStart, pointerPositionX, pointerPositionY}) => {
 
@@ -14,18 +14,18 @@ const Pointer = ({direction, mouseUpAction, handleMouseMove, handleTouchMove, sw
   }
   
   const pointerPositionStyles = {
-    left: `${pointerPositionX - 40}px`,
-    top: `${pointerPositionY - 40}px`
+    left: `${pointerPositionX - 50}px`,
+    top: `${pointerPositionY - 50}px`
   }
 
   const rightSwipeVisibility = direction === 'right' ?  {display: 'block'} : {display: 'none'};
   const leftSwipeVisibility = direction === 'left' ?  {display: 'block'} : {display: 'none'};
   const arrowsVisibility = direction === 'center' ?  {display: 'block'} : {display: 'none'};
   return(
-    <div id="el1" className="direction" onMouseMove={handleMouseMove} onTouchMove={handleTouchMove} onMouseUp={handleMouseUp} onTouchEnd={handleMouseUp} style={pointerPositionStyles}>
-      <img src={leftSwipe} alt="Settings" className="swipe-arrow" style={leftSwipeVisibility}></img>
-      <img id="el2" src={rightSwipe} alt="Settings" className="swipe-arrow" style={rightSwipeVisibility}></img>
-      <img src={arrows} alt="Settings" className="swipe-arrow" style={arrowsVisibility}></img>
+    <div className="pointer" onMouseMove={handleMouseMove} onTouchMove={handleTouchMove} onMouseUp={handleMouseUp} onTouchEnd={handleMouseUp} style={pointerPositionStyles}>
+      <img src={leftSwipe} alt="Swipe" className="swipe-arrow" style={leftSwipeVisibility}></img>
+      <img src={rightSwipe} alt="Swipe" className="swipe-arrow" style={rightSwipeVisibility}></img>
+      <img src={arrows} alt="Swipe" className="swipe-arrow" style={arrowsVisibility}></img>
     </div>
   )
 }

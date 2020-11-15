@@ -7,23 +7,30 @@ import ImgSubmitForm from './img-submit-form/img-submit-form';
 import SlideSwitcher from './slide-switcher/slide-switcher';
 import SlideCounter from './slide-counter/slide-counter';
 import Toolkit from './toolkit/toolkit';
-import Pointer from './pointer/pointer';
+import Pointer from './pointers/pointer/pointer';
+import FollowingPointer from './pointers/following-pointer/following-pointer';
+
 import leftArrow from '../../assets/icons/left-arrow.svg';
 import rightArrow from '../../assets/icons/right-arrow.svg';
+import leftSwipe from '../../assets/icons/left-swipe.svg';
+import rightSwipe from '../../assets/icons/right-swipe.svg';
+import arrows from '../../assets/icons/arrows.svg';
 
 export default class Slider extends Component {
 
+  static getDerivedStateFromProps(props, state){
+    const newData = props.children;
+    if( props.children !== state.reicievedContent){
+        return {
+            ...state, ...{reicievedContent: newData, data: newData}
+        }
+    }
+    return null;
+  }
+
   state = {
-    data: [
-      ['image', 'https://images.unsplash.com/photo-1440582096070-fa5961d9d682?ixlib=rb-1.2.1&auto=format&fit=crop&w=1055&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1446482932150-b7ff60bab8e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1539191863632-8caef441bfc2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1588095938732-5463642ce960?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1550934172-beb213c78c11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1568164651648-d90699a5182d?ixlib=rb-1.2.1&auto=format&fit=crop&w=966&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1604599340287-2042e85a3802?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80'],
-      ['image', 'https://images.unsplash.com/photo-1588343710499-948bbeb14ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=1189&q=80'],
-    ],
+    reicievedContent: [],
+    data: [],
     currentDataIndex: 3,
     slide: -100,
     transitionXstyle: 0,
@@ -40,7 +47,8 @@ export default class Slider extends Component {
     showSlides: false,
     disabledInput: false,
     pointerPositionX: 0,
-    pointerPositionY: 0
+    pointerPositionY: 0,
+    slideSwiping: false 
   }
 
   contentLoading = (data) => {
@@ -62,8 +70,8 @@ export default class Slider extends Component {
   }
 
   componentDidMount() {
-    const sliderBlock = document.getElementById('slider')
-    sliderBlock.addEventListener('transitionend', this.newSliderPosition)    
+    const sliderBlock = document.getElementById('slider');
+    sliderBlock.addEventListener('transitionend', this.newSliderPosition);
   }
 
   componentDidUpdate(prevPorps, prevState) {
@@ -187,8 +195,11 @@ export default class Slider extends Component {
     })
   }
 
-
   newSliderPosition = () => {
+    this.setState({
+      pointerPositionX: this.pointerPositionX,
+      pointerPositionY: this.pointerPositionY
+    })
     if (this.state.switchToSlideX) {
       this.goToSlideX()
     } else {
@@ -207,6 +218,54 @@ export default class Slider extends Component {
     }
   }
 
+  pointerPositionX = 0;
+  pointerPositionY = 0;
+
+  getCoords = (x, y) => {
+    if (this.state.slide === -100) {
+      this.setState({
+        pointerPositionX: x,
+        pointerPositionY: y
+      })
+    } else {
+      this.pointerPositionX = x;
+      this.pointerPositionY = y;
+    }
+  }
+
+  pointMove = (swipeLength) => {
+    if (Math.abs(swipeLength) > 150) {
+      if (swipeLength > 0) {
+        this.setState({
+          direction: 'right',
+          slideSwiping: true
+        })
+      } else {
+        this.setState({
+          direction: 'left',
+          slideSwiping: true
+        })
+      }
+    } else {
+      this.setState({
+        direction: 'center',
+        slideSwiping: true
+      })    
+    }
+  }
+
+  mouseUpAction = (swipeLength) => {
+    if (Math.abs(swipeLength) > 150) {
+      this.swipeFunction(swipeLength)
+    } else {
+      this.setState({
+        mousePressed: false,
+        direction: '',
+        slideSwiping: false
+      })  
+    }
+  }
+
   handleMouseDown = (e) => {
     e.preventDefault();
     if (this.state.slide === -100) {
@@ -218,85 +277,106 @@ export default class Slider extends Component {
     }
   }
 
-  getCoords = (x, y) => {
-    if (this.state.slide === -100) {
-      this.setState({
-        pointerPositionX: x,
-        pointerPositionY: y
-      })
-    }
-  }
-
-  pointMove = (swipeLength) => {
-    if (Math.abs(swipeLength) > 150) {
-      if (swipeLength > 0) {
-        this.setState({
-          direction: 'left',
-        })
-      } else {
-        this.setState({
-          direction: 'right',
-        })
-      }
-    } else {
-      this.setState({
-        direction: 'center',
-      })    
-    }
-  }
-
   handleMouseMove = (e) => {
     e.preventDefault();
-    this.getCoords(e.clientX, e.clientY);
+    const x = e.clientX;
+    const y = e.clientY;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    console.log(y)
+    this.getCoords(x, y);
+
     if (this.state.mousePressed) {
-      const swipeLength = e.clientX - this.state.swipeStart;
-      this.pointMove(swipeLength)
-    }
-  }
+      const swipeLength = x - this.state.swipeStart;
 
-  mouseUpAction = (swipeLength) => {
-    if (Math.abs(swipeLength) > 150) {
-      this.swipeFunction(swipeLength)
-    } else {
-      this.setState({
-        mousePressed: false,
-        direction: ''
-      })  
-    }
-  }
-
-  handleMouseUp = (e) => {
-    e.preventDefault();
-    const swipeLength = e.clientX - this.state.swipeStart;
-    if (this.state.mousePressed) this.mouseUpAction(swipeLength)
-  }
-
-  handleMouseLeave = (e) => {
-    if (this.state.mousePressed) {
-      const x = e.clientX;
-      const y = e.clientY;
-      const xCenter = window.innerWidth/2;
-      const yCenter = window.innerHeight/2;
-      
-      if (x < xCenter - 60 || x > xCenter + 60 || y < yCenter - 60 || y > yCenter + 60) {
-        this.setState({
-          mousePressed: false,
-          direction: ''
-        })  
+      if (x < 50 || x > windowWidth - 50 || y < 50 || y > windowHeight - 50) {
+        this.mouseUpAction(swipeLength)
+      } else {
+        this.pointMove(swipeLength)
       }
     }
   }
+
   
+  pointerRef = React.createRef();
+  followingPointerRef = React.createRef();
+  pointerImageRef = React.createRef();
+  followingPointerImageRef = React.createRef();
+  
+  pointerPosition = (x, y) => {
+    this.pointerRef.current.style = `left: ${x - 50}px; top: ${y - 50}px`;
+    this.followingPointerRef.current.style = `left: ${x - 50}px; top: ${y - 50}px`;
+  }
+
+  pointerDirection = (swipeLength) => {
+    if (swipeLength < -50) {
+      this.pointerImageRef.current.src = leftSwipe;
+      this.followingPointerImageRef.current.src = leftSwipe;
+    }      
+    else if (swipeLength > 50) {
+      this.pointerImageRef.current.src = rightSwipe;
+      this.followingPointerImageRef.current.src = rightSwipe;
+    }
+    else {
+      this.pointerImageRef.current.src = arrows;
+      this.followingPointerImageRef.current.src = arrows;
+    }
+  }
+
   handleTouchStart = (e) => {
-    const x = e.touches[0];
-    this.state.swipeStart = x.pageX
+    const x = e.touches[0].pageX;
+    const y = e.touches[0].pageY;
+    this.state.swipeStart = x;
+    if (this.state.slide === -100) {
+      this.pointerPosition(x, y);
+      this.pointerPosition(x, y);
+      this.pointerImageRef.current.src = arrows;
+      this.followingPointerImageRef.current.src = arrows;
+    }
+  }
+
+  handleTouchMove = (e) => {
+    if (this.state.slide === -100) {
+      const x = e.changedTouches[0].pageX; 
+      const y = e.changedTouches[0].pageY;
+
+      this.pointerPosition(x, y);
+      this.pointerPosition(x, y);
+      let swipeLength = x - this.state.swipeStart;
+      
+      this.pointerDirection(swipeLength)
+    }
   }
 
   handleTouchEnd = (e) => {
     const x = e.changedTouches[0].pageX;
     const swipeLength = x - this.state.swipeStart;
-    if (Math.abs(swipeLength) > 50) this.swipeFunction(swipeLength)
+    document.getElementById("pointer").style.display = "none";
+    document.getElementById("following-pointer").style.display = "none";
+    if (Math.abs(swipeLength) > 50) this.swipeFunction(swipeLength);
   }
+  
+  // handleMouseUp = (e) => {
+  //   e.preventDefault();
+  //   const swipeLength = e.clientX - this.state.swipeStart;
+  //   if (this.state.mousePressed) this.mouseUpAction(swipeLength)
+  // }
+
+  // handleMouseLeave = (e) => {
+  //   if (this.state.mousePressed) {
+  //     const x = e.clientX;
+  //     const y = e.clientY;
+  //     const xCenter = window.innerWidth/2;
+  //     const yCenter = window.innerHeight/2;
+      
+  //     if (x < xCenter - 60 || x > xCenter + 60 || y < yCenter - 60 || y > yCenter + 60) {
+  //       this.setState({
+  //         mousePressed: false,
+  //         direction: ''
+  //       })  
+  //     }
+  //   }
+  // }
 
   render() {
     const {
@@ -323,6 +403,12 @@ export default class Slider extends Component {
 
     return(
       <div className="slider-wrapper">
+        <div ref={this.pointerRef} id="pointer" style={{display: 'none'}} className="pointer">
+          <img ref={this.pointerImageRef} src={arrows} alt="Swipe" id="swipe-pointer" className="swipe-arrow"></img>
+        </div>
+        <div ref={this.followingPointerRef} id="following-pointer" style={{display: 'none'}} className="following-pointer">
+          <img ref={this.followingPointerImageRef} src={arrows} alt="Swipe" id="following-swipe-pointer" className="swipe-arrow"></img>
+        </div>
         <div 
           id={"slider"}
           className={"slider"} 
@@ -343,12 +429,22 @@ export default class Slider extends Component {
             slideValue={slideValue}
             slideDifference={slideDifference}
             transitionXstyle={transitionXstyle}
-
             contentLoading={this.contentLoading}
             showSlides={showSlides}
           />
         </div>
         <Pointer 
+          direction={direction}
+          pointerMouseUp={this.pointerMouseUp}
+          mouseUpAction={this.mouseUpAction}
+          handleMouseMove={this.handleMouseMove}
+          handleTouchMove={this.handleTouchMove}
+          swipeStart={this.state.swipeStart}
+          pointerPositionX={pointerPositionX}
+          pointerPositionY={pointerPositionY}
+        />
+        <FollowingPointer 
+          slide={slide}
           direction={direction}
           pointerMouseUp={this.pointerMouseUp}
           mouseUpAction={this.mouseUpAction}
@@ -398,3 +494,9 @@ export default class Slider extends Component {
     )
   }
 }
+
+
+
+
+
+

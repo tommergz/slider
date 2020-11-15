@@ -1,0 +1,11 @@
+.pointer {
+  position: absolute;
+  z-index: 2;
+}
+
+.swipe-arrow {
+  width: 80px;
+  background-color: black;
+  padding: 10px;
+  border-radius: 40%;
+}
