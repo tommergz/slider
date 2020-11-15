@@ -1,47 +1,32 @@
 import React from 'react';
 import { Component, useEffect, useMemo } from 'react';
 import './slide-list.css';
-import videoIcon from '../../../assets/icons/video.svg';
-import Loading from './loading/loading';
 
 const SlideList = ({
   data, 
-  contentLoading, 
   currentDataIndex, 
   multipleSlides,
   switchToSlideX,
   slideValue, 
-  slideDifference, 
-  transitionXstyle, 
-  showSlides
+  slideDifference
 }) => {
 
   useEffect(() => {
-    contentLoading(data)
-  }, []);
 
-  useEffect(() => {
-
-  }, [currentDataIndex, multipleSlides, switchToSlideX, showSlides] )
+  }, [currentDataIndex, multipleSlides, switchToSlideX] )
 
   const slidesMap = (arr) => {
     return arr.map((item, index) => {
       const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
-      let content;
-      if (item[0] === 'image') {
-        content = <img className="image" src={item[1]} />
-      }
       return (
         <div key={+Date.now().toString() + index} className={slideStyle}>
-          {content}
+          {item}
         </div>
       )
     })
   }
 
-  const makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides) => {
-    // const slideStyle = multipleSlides ? 'multi-slide' : 'slide';
-
+  const makeSlides = (data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference) => {
 
     const allData = [...data];
     let newData = [];
@@ -140,27 +125,18 @@ const SlideList = ({
     }
   }
 
-  const allSlides = useMemo(() => slidesMap(data), [data]);
-  const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference, transitionXstyle, showSlides);
-  
-  const content = showSlides ? 
-  <div>
-    <div className="slide-list">
-      {slides}
-    </div>  
-    <div className="full-slide-list">
-      {allSlides}
-    </div> 
-  </div> :
-  <div>
-    <Loading />
-    <div className="full-slide-list">
-      {allSlides}
-    </div> 
-  </div>
+  const allSlides = useMemo(() => slidesMap(data), [data]);slidesMap(data);
+  const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference);
 
   return(
-    content
+    <div>
+      <div className="slide-list">
+        {slides}
+      </div>  
+      <div className="full-slide-list">
+        {allSlides}
+      </div> 
+    </div>
   )
 
 }

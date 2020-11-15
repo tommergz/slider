@@ -22,7 +22,7 @@ export default class Slider extends Component {
     const newData = props.children;
     if( props.children !== state.reicievedContent){
         return {
-            ...state, ...{reicievedContent: newData, data: newData}
+          ...state, ...{reicievedContent: newData, data: newData}
         }
     }
     return null;
@@ -31,7 +31,7 @@ export default class Slider extends Component {
   state = {
     reicievedContent: [],
     data: [],
-    currentDataIndex: 3,
+    currentDataIndex: 5,
     slide: -100,
     transitionXstyle: 0,
     inputValue: '',
@@ -44,29 +44,10 @@ export default class Slider extends Component {
     mousePressed: false,
     swipeStart: 0,
     contentLoaded: 0,
-    showSlides: false,
     disabledInput: false,
     pointerPositionX: 0,
     pointerPositionY: 0,
     slideSwiping: false 
-  }
-
-  contentLoading = (data) => {
-    for (let i = 0; i < data.length; i++) {
-      let newImg = new Image();
-      newImg.src = data[i][1];
-      newImg.onload = () => { 
-        if (this.state.contentLoaded === data.length - 1) {
-          this.setState( (state) => ({
-
-            showSlides: true
-          }) ) 
-        }
-        else {
-          this.setState( (state) => ({contentLoaded : state.contentLoaded + 1}) ) 
-        }
-      }
-    }
   }
 
   componentDidMount() {
@@ -283,14 +264,17 @@ export default class Slider extends Component {
     const y = e.clientY;
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    console.log(y)
     this.getCoords(x, y);
 
     if (this.state.mousePressed) {
       const swipeLength = x - this.state.swipeStart;
 
       if (x < 50 || x > windowWidth - 50 || y < 50 || y > windowHeight - 50) {
-        this.mouseUpAction(swipeLength)
+        this.setState({
+          mousePressed: false,
+          direction: '',
+          slideSwiping: false
+        })  
       } else {
         this.pointMove(swipeLength)
       }
@@ -355,28 +339,6 @@ export default class Slider extends Component {
     document.getElementById("following-pointer").style.display = "none";
     if (Math.abs(swipeLength) > 50) this.swipeFunction(swipeLength);
   }
-  
-  // handleMouseUp = (e) => {
-  //   e.preventDefault();
-  //   const swipeLength = e.clientX - this.state.swipeStart;
-  //   if (this.state.mousePressed) this.mouseUpAction(swipeLength)
-  // }
-
-  // handleMouseLeave = (e) => {
-  //   if (this.state.mousePressed) {
-  //     const x = e.clientX;
-  //     const y = e.clientY;
-  //     const xCenter = window.innerWidth/2;
-  //     const yCenter = window.innerHeight/2;
-      
-  //     if (x < xCenter - 60 || x > xCenter + 60 || y < yCenter - 60 || y > yCenter + 60) {
-  //       this.setState({
-  //         mousePressed: false,
-  //         direction: ''
-  //       })  
-  //     }
-  //   }
-  // }
 
   render() {
     const {
@@ -391,15 +353,16 @@ export default class Slider extends Component {
       toolkit,
       slideDifference,
       direction,   
-      showSlides,
       disabledInput,
       pointerPositionX,
       pointerPositionY } = this.state;
 
-    let swipeStyles = {
+    const swipeStyles = {
       transform: `translateX(${slide}%)`,
       transition: `transform ease-out ${transitionXstyle}s`
     };
+
+    const sliderStyle = multipleSlides ? ' multi-slider' : '';
 
     return(
       <div className="slider-wrapper">
@@ -411,7 +374,7 @@ export default class Slider extends Component {
         </div>
         <div 
           id={"slider"}
-          className={"slider"} 
+          className={"slider" + sliderStyle} 
           style={swipeStyles} 
           onTouchStart={this.handleTouchStart}
           onTouchMove={this.handleTouchMove}
@@ -428,9 +391,6 @@ export default class Slider extends Component {
             switchToSlideX={switchToSlideX}
             slideValue={slideValue}
             slideDifference={slideDifference}
-            transitionXstyle={transitionXstyle}
-            contentLoading={this.contentLoading}
-            showSlides={showSlides}
           />
         </div>
         <Pointer 
@@ -469,12 +429,12 @@ export default class Slider extends Component {
           slideRenderSwitcher={this.slideRenderSwitcher}
           toolkit={toolkit}
         />
-        <ImgSubmitForm
+        {/* <ImgSubmitForm
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           inputValue={inputValue}
           toolkit={toolkit}
-        />
+        /> */}
         <div className="slide-switcher-and-counter-block">
           <SlideCounter 
             currentDataIndex={currentDataIndex}

@@ -39,3 +39,25 @@ body {
 .invisible {
   display: none;
 }
+
+.item-input {
+  width: 500px;
+}
+
+@media(max-width: 800px) {
+  .item-input {
+    width: 280px;
+  }
+}
+
+@media(max-width: 500px) {
+  .item-input {
+    width: 200px;
+  }
+}
+
+@media(max-width: 400px) {
+  .item-input {
+    width: 100px;
+  }
+}

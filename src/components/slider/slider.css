@@ -8,12 +8,16 @@
 }
 
 .slider {
-  width: 100vW;
+  width: auto;
   margin: 0;
   padding: 0;
   display: flex;
   align-items: center;
   position: relative;
+}
+
+.multi-slider {
+  width: 100%;
 }
 
 .left-slide {
@@ -26,7 +30,9 @@
 
 .slide {
   min-width: 100%;
+  min-height: 100vh;
   display: flex;
+  align-items: center;
   justify-content: center;
 }
 
@@ -69,7 +75,7 @@
 
 @media (max-width: 800px) {
   .slide-switcher-and-counter-block {
-    top: 150px;
+    top: 100px;
     bottom: auto;
   }
 }
