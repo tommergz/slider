@@ -7,7 +7,7 @@ export default class App extends Component {
     const sliderContent = [
       <img key={+Date.now().toString() * 1} className="image" src='https://images.unsplash.com/photo-1440582096070-fa5961d9d682?ixlib=rb-1.2.1&auto=format&fit=crop&w=1055&q=80'/>,
       <img key={+Date.now().toString() * 2} className="image" src='https://images.unsplash.com/photo-1446482932150-b7ff60bab8e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80'/>,
-      <form key={+Date.now().toString() * 3} name="search" >
+      <form key={+Date.now().toString() * 3} name="search" className="item-form">
         <input type="text" name="key" className="item-input"></input>
         <input type="submit" name="send" value="Submit"></input>
       </form>,

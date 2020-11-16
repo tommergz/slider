@@ -1,5 +1,5 @@
 import React from 'react';
-import { Component, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import './slide-list.css';
 
 const SlideList = ({
@@ -10,10 +10,6 @@ const SlideList = ({
   slideValue, 
   slideDifference
 }) => {
-
-  useEffect(() => {
-
-  }, [currentDataIndex, multipleSlides, switchToSlideX] )
 
   const slidesMap = (arr) => {
     return arr.map((item, index) => {
@@ -127,6 +123,7 @@ const SlideList = ({
 
   const allSlides = useMemo(() => slidesMap(data), [data]);slidesMap(data);
   const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference);
+  // const slideLIstStule = load ? {opacity: '1'} : {opacity: '0'};
 
   return(
     <div>
@@ -141,4 +138,4 @@ const SlideList = ({
 
 }
 
-export default SlideList;
+export default React.memo(SlideList);
