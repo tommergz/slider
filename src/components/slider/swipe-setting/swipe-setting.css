@@ -1,0 +1,16 @@
+.swipe-setting {
+  position: absolute;
+  z-index: 1;
+  left: 95px;
+  top: 35px;
+}
+
+.swipe-setting-button {
+  height: 45px;
+  width: 45px;
+}
+
+.swipe-setting-image {
+  width: 28px;
+  height: 28px;
+}

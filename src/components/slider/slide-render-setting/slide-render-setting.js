@@ -10,11 +10,11 @@ const SlideRenderSetting = ({multipleSlides, slideRenderSwitcher, toolkit}) => {
   return(
     <div className={"slide-render-setting-wrapper" + visibility}>
       <div className="slide-render-setting-buttons">
-        <button disabled={multipleSlides} className={"slide-render-setting-button button" + pressedYesButton} onClick={slideRenderSwitcher}>
-          <img src={slides} alt="Slides"></img>
+        <button disabled={multipleSlides} className={"slide-render-setting-button button setting-button" + pressedYesButton} onClick={slideRenderSwitcher}>
+          <img src={slides} alt="Slides" className="setting-svg"></img>
         </button>
-        <button disabled={!multipleSlides} className={"slide-render-setting-button button" + pressedNoButton} onClick={slideRenderSwitcher}>
-          <img src={slide} alt="Slide"></img>
+        <button disabled={!multipleSlides} className={"slide-render-setting-button button setting-button" + pressedNoButton} onClick={slideRenderSwitcher}>
+          <img src={slide} alt="Slide" className="setting-svg"></img>
         </button>
       </div>
     </div>

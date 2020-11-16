@@ -9,6 +9,7 @@ import SlideCounter from './slide-counter/slide-counter';
 import Toolkit from './toolkit/toolkit';
 import Pointer from './pointers/pointer/pointer';
 import FollowingPointer from './pointers/following-pointer/following-pointer';
+import SwipeSetting from './swipe-setting/swipe-setting';
 
 import leftArrow from '../../assets/icons/left-arrow.svg';
 import rightArrow from '../../assets/icons/right-arrow.svg';
@@ -47,7 +48,8 @@ export default class Slider extends Component {
     disabledInput: false,
     pointerPositionX: 0,
     pointerPositionY: 0,
-    slideSwiping: false 
+    slideSwiping: false,
+    moving: false
   }
 
   componentDidMount() {
@@ -172,6 +174,14 @@ export default class Slider extends Component {
     this.setState(({toolkit}) => {
       return {
         toolkit: !toolkit
+      }
+    })
+  }
+
+  swipeSetting = () => {
+    this.setState(({moving}) => {
+      return {
+        moving: !moving
       }
     })
   }
@@ -355,7 +365,9 @@ export default class Slider extends Component {
       direction,   
       disabledInput,
       pointerPositionX,
-      pointerPositionY } = this.state;
+      pointerPositionY,
+      slideSwiping,
+      moving } = this.state;
 
     const swipeStyles = {
       transform: `translateX(${slide}%)`,
@@ -376,13 +388,13 @@ export default class Slider extends Component {
           id={"slider"}
           className={"slider" + sliderStyle} 
           style={swipeStyles} 
-          onTouchStart={this.handleTouchStart}
-          onTouchMove={this.handleTouchMove}
-          onTouchEnd={this.handleTouchEnd}
-          onMouseDown={this.handleMouseDown}
-          onMouseMove={this.handleMouseMove}
-          onMouseUp={this.handleMouseUp}
-          onMouseLeave={this.handleMouseLeave}
+          onTouchStart={moving ? this.handleTouchStart : null}
+          onTouchMove={moving ? this.handleTouchMove : null}
+          onTouchEnd={moving ? this.handleTouchEnd : null}
+          onMouseDown={moving ? this.handleMouseDown : null}
+          onMouseMove={moving ? this.handleMouseMove : null}
+          onMouseUp={moving ? this.handleMouseUp : null}
+          onMouseLeave={moving ? this.handleMouseLeave : null}
         >
           <SlideList 
             data={data}
@@ -422,7 +434,10 @@ export default class Slider extends Component {
         </button>
         <Toolkit 
           setting={this.setting}
-          toolkit={toolkit}
+        />
+        <SwipeSetting 
+          swipeSetting={this.swipeSetting}
+          moving={moving}
         />
         <SlideRenderSetting 
           multipleSlides={multipleSlides}

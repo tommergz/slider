@@ -41,6 +41,7 @@ body {
 }
 
 .item-form {
+  width: 75%;
   display: flex;
   justify-content: center;
 }

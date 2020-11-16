@@ -123,10 +123,9 @@ const SlideList = ({
 
   const allSlides = useMemo(() => slidesMap(data), [data]);slidesMap(data);
   const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference);
-  // const slideLIstStule = load ? {opacity: '1'} : {opacity: '0'};
 
   return(
-    <div>
+    <div className="slide-list-wrapper">
       <div className="slide-list">
         {slides}
       </div>  
