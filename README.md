@@ -4,7 +4,7 @@ You can either use the demo or set the app up on your computer
 
 ### Demo:
 
-[Slider-app](tombslider.netlify.app)
+[Slider-app](https://tombslider.netlify.app)
 
 ### Setup:
 1. Clone the repository
