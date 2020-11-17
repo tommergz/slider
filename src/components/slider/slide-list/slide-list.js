@@ -121,7 +121,7 @@ const SlideList = ({
     }
   }
 
-  const allSlides = useMemo(() => slidesMap(data), [data]);slidesMap(data);
+  const allSlides = useMemo(() => slidesMap(data), [data]);
   const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference);
 
   return(
