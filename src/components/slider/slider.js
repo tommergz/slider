@@ -49,7 +49,7 @@ export default class Slider extends Component {
     pointerPositionX: 0,
     pointerPositionY: 0,
     slideSwiping: false,
-    moving: false
+    moving: true
   }
 
   componentDidMount() {
