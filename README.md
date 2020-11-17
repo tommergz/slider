@@ -32,8 +32,3 @@ You can either use the demo or set the app up on your computer
 ### My optimization: 
 
 * Slider can work with any number of images. It doesn't matter if you load one or one million images, it will work well in any case.
-
-### P.S.
-
-I have a question about this task: 'Must work for any HTML content'. Should I make slider for any file type? 
-If so I can re-make the app so it can work with any file types.
