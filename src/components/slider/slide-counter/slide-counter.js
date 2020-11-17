@@ -20,4 +20,4 @@ const SlideCounter = ({currentDataIndex, data, multipleSlides, toolkit}) => {
   )
 }
 
-export default SlideCounter;
+export default React.memo(SlideCounter);

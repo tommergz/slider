@@ -22,4 +22,4 @@ const ImgSubmitForm = ({handleSubmit, handleChange, inputValue, toolkit}) => {
   )
 }
 
-export default ImgSubmitForm;
+export default React.memo(ImgSubmitForm);

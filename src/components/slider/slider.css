@@ -81,6 +81,15 @@
   height: 28px;
 }
 
+.svg-element {
+  opacity: 0;
+  transition: ease-out 1.5s;
+}
+
+.visible-element {
+  opacity: 1;
+}
+
 @media (max-width: 800px) {
   .slide-switcher-and-counter-block {
     top: 100px;

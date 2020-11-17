@@ -17,6 +17,8 @@ import leftSwipe from '../../assets/icons/left-swipe.svg';
 import rightSwipe from '../../assets/icons/right-swipe.svg';
 import arrows from '../../assets/icons/arrows.svg';
 
+import svgs from '../../assets/collections/icons';
+
 export default class Slider extends Component {
 
   static getDerivedStateFromProps(props, state){
@@ -32,6 +34,8 @@ export default class Slider extends Component {
   state = {
     reicievedContent: [],
     data: [],
+    allSvgsLoaded: '',
+    svgsLoaded: 0,
     currentDataIndex: 5,
     slide: -100,
     transitionXstyle: 0,
@@ -55,6 +59,7 @@ export default class Slider extends Component {
   componentDidMount() {
     const sliderBlock = document.getElementById('slider');
     sliderBlock.addEventListener('transitionend', this.newSliderPosition);
+    this.contentLoading(svgs);
   }
 
   componentDidUpdate(prevPorps, prevState) {
@@ -65,6 +70,23 @@ export default class Slider extends Component {
       }
       else if (this.state.currentDataIndex - value < 0) {
         this.moveRight()
+      }
+    }
+  }
+
+  contentLoading = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      let newImg = new Image();
+      newImg.src = data[i].default;
+      newImg.onload = () => { 
+        if (this.state.svgsLoaded === data.length - 2) {
+          this.setState({
+            allSvgsLoaded: ' visible-element'
+          }) 
+        }
+        else {
+          this.setState( (state) => ({svgsLoaded : state.svgsLoaded + 1}) ) 
+        }
       }
     }
   }
@@ -367,7 +389,8 @@ export default class Slider extends Component {
       pointerPositionX,
       pointerPositionY,
       slideSwiping,
-      moving } = this.state;
+      moving,
+      allSvgsLoaded } = this.state;
 
     const swipeStyles = {
       transform: `translateX(${slide}%)`,
@@ -427,22 +450,25 @@ export default class Slider extends Component {
           pointerPositionY={pointerPositionY}
         />
         <button className="button prev-button slide-button" onClick={this.moveLeft}>
-          <img src={leftArrow} alt="Left arrow" className="arrow"></img>
+          <img src={leftArrow} alt="Left arrow" className={"arrow svg-element" + allSvgsLoaded}></img>
         </button>
         <button className="button next-button slide-button" onClick={this.moveRight}>
-          <img src={rightArrow} alt="Righ arrow" className="arrow"></img>
+          <img src={rightArrow} alt="Righ arrow" className={"arrow svg-element" + allSvgsLoaded}></img>
         </button>
         <Toolkit 
           setting={this.setting}
+          allSvgsLoaded={allSvgsLoaded}
         />
         <SwipeSetting 
           swipeSetting={this.swipeSetting}
           moving={moving}
+          allSvgsLoaded={allSvgsLoaded}
         />
         <SlideRenderSetting 
           multipleSlides={multipleSlides}
           slideRenderSwitcher={this.slideRenderSwitcher}
           toolkit={toolkit}
+          allSvgsLoaded={allSvgsLoaded}
         />
         {/* <ImgSubmitForm
           handleChange={this.handleChange}
@@ -463,15 +489,10 @@ export default class Slider extends Component {
             toolkit={toolkit}
             moveToSlideX={this.moveToSlideX}
             disabledInput={disabledInput}
+            allSvgsLoaded={allSvgsLoaded}
           />
         </div>
       </div>
     )
   }
 }
-
-
-
-
-
-
