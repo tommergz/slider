@@ -36,7 +36,7 @@ export default class Slider extends Component {
     data: [],
     allSvgsLoaded: '',
     svgsLoaded: 0,
-    currentDataIndex: 5,
+    currentDataIndex: 4,
     slide: -100,
     transitionXstyle: 0,
     inputValue: '',
