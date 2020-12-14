@@ -17,6 +17,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  will-change: transform;
 }
 
 .multi-slider {
