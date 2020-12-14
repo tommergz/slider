@@ -8,7 +8,8 @@ const SlideList = ({
   multipleSlides,
   switchToSlideX,
   slideValue, 
-  slideDifference
+  slideDifference,
+  firstSwipe
 }) => {
 
   const slidesMap = (arr) => {
@@ -31,6 +32,9 @@ const SlideList = ({
     const extraSlides = addExtraSlides ? 3 : 2
     if (length) {
       if (length === 1) return slidesMap(allData);
+
+      if (!firstSwipe) return slidesMap(allData);       //exp
+
       const i = Number(slideValue);
 
 ////////////////////// MOVE TO SLIDE X ////////////////////////////////////
@@ -121,17 +125,17 @@ const SlideList = ({
     }
   }
 
-  const allSlides = useMemo(() => slidesMap(data), [data]);
-  const slides = makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference);
+  // const allSlides = useMemo(() => slidesMap(data), [data]);
+  const slides = useMemo(() => makeSlides(data, currentDataIndex, multipleSlides, switchToSlideX, slideValue, slideDifference));
 
   return(
     <div className="slide-list-wrapper">
       <div className="slide-list">
         {slides}
-      </div>  
-      <div className="full-slide-list">
+      </div>
+      {/* <div className="full-slide-list">
         {allSlides}
-      </div> 
+      </div> */}
     </div>
   )
 

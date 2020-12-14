@@ -26,19 +26,6 @@ module.exports = {
           }
         ]
       },
-      // Loading music 
-      {
-        test: /\.(mp3)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'music',
-              use: 'file-loader?name=videos/[name].[ext]',
-            }
-          }
-        ]
-      },
       // Loading fonts
       {
         test: /\.(ttf|otf|eot|woff|woff2)$/,

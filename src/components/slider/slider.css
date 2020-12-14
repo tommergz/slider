@@ -5,6 +5,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  opacity: 0;
+  transition: ease-out 1.5s;
 }
 
 .slider {
